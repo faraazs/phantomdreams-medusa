@@ -1,7 +1,7 @@
 "use client"
 
 import { Popover, Transition } from "@headlessui/react"
-import { ArrowRightMini, XMark } from "@medusajs/icons"
+import { ArrowRightMini, BarsThree, XMark } from "@medusajs/icons"
 import { Text, clx, useToggleState } from "@medusajs/ui"
 import { Fragment } from "react"
 
@@ -30,8 +30,11 @@ const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
                 <Popover.Button
                   data-testid="nav-menu-button"
                   className="relative h-full flex items-center transition-all ease-out duration-200 focus:outline-none hover:text-ui-fg-base"
+                  aria-label="Menu"
+                  title="Menu"
                 >
-                  Menu
+                  <BarsThree className="w-5 h-5" />
+                  <span className="sr-only">Menu</span>
                 </Popover.Button>
               </div>
 

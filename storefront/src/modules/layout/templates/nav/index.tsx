@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import { ShoppingBag, User } from "@medusajs/icons"
 
 import { listRegions } from "@lib/data/regions"
 import { StoreRegion } from "@medusajs/types"
@@ -45,18 +46,25 @@ export default async function Nav() {
                 className="hover:text-ui-fg-base"
                 href="/account"
                 data-testid="nav-account-link"
+                aria-label="Account"
+                title="Account"
               >
-                Account
+                <User className="w-5 h-5" />
+                <span className="sr-only">Account</span>
               </LocalizedClientLink>
             </div>
             <Suspense
               fallback={
                 <LocalizedClientLink
-                  className="hover:text-ui-fg-base flex gap-2"
+                  className="hover:text-ui-fg-base flex items-center gap-x-1"
                   href="/cart"
                   data-testid="nav-cart-link"
+                  aria-label="Cart"
+                  title="Cart"
                 >
-                  Cart (0)
+                  <ShoppingBag className="w-5 h-5" />
+                  <span className="sr-only">Cart (0)</span>
+                  <span className="text-xsmall-regular">0</span>
                 </LocalizedClientLink>
               }
             >
