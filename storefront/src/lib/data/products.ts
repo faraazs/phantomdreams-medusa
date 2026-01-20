@@ -76,6 +76,11 @@ export const PRODUCT_LINE_ITEM_FIELDS = [
   "*variants.calculated_price",
 ].join(",")
 
+const salesChannelId = process.env.NEXT_PUBLIC_MEDUSA_SALES_CHANNEL_ID
+const salesChannelParam = salesChannelId
+  ? { sales_channel_id: salesChannelId }
+  : {}
+
 export const getProductsById = cache(async function ({
   ids,
   regionId,
@@ -91,6 +96,7 @@ export const getProductsById = cache(async function ({
         id: ids,
         region_id: regionId,
         fields: fields ?? PRODUCT_PRICE_FIELDS,
+        ...salesChannelParam,
       },
       { next: { tags: ["products"], revalidate: 300 } as any }
     )
@@ -116,6 +122,7 @@ export const getProductByHandle = cache(async function (
       region_id: regionId,
       fields,
       limit: 1,
+      ...salesChannelParam,
     },
     { next: { tags: ["products"], revalidate: 300 } as any }
   )
@@ -136,6 +143,7 @@ export const getProductByHandle = cache(async function (
         fields,
         limit: pageLimit,
         offset,
+        ...salesChannelParam,
       },
       { next: { tags: ["products"], revalidate: 300 } as any }
     )
@@ -189,6 +197,7 @@ export const getProductsList = cache(async function ({
         offset,
         region_id: region.id,
         fields: fields ?? PRODUCT_LIST_FIELDS,
+        ...salesChannelParam,
         ...restQueryParams,
       },
       { next: { tags: ["products"], revalidate: 300 } as any }
