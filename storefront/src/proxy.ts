@@ -79,6 +79,15 @@ async function getCountryCode(
  */
 export async function proxy(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
+  const nextAssetMatch = request.nextUrl.pathname.match(
+    /^\/[a-z]{2}\/_next\/(image|static|data)/
+  )
+
+  if (nextAssetMatch) {
+    const url = request.nextUrl.clone()
+    url.pathname = `/_next/${nextAssetMatch[1]}`
+    return NextResponse.rewrite(url)
+  }
   const isOnboarding = searchParams.get("onboarding") === "true"
   const cartId = searchParams.get("cart_id")
   const checkoutStep = searchParams.get("step")
@@ -132,5 +141,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.gif|.*\\.svg).*)"], // prevents redirecting on static files
+  matcher: [
+    "/((?!api|_next/static|_next/image|_next/data|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|webp)).*)",
+  ], // prevents redirecting on static files
 }

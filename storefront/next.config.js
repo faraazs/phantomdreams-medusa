@@ -7,6 +7,38 @@ const medusaBackendHost = medusaBackendUrl?.replace(/^https?:\/\//, "")
 const medusaBackendProtocol = medusaBackendUrl?.startsWith("https")
   ? "https"
   : "http"
+const minioEndpoint = process.env.NEXT_PUBLIC_MINIO_ENDPOINT
+let minioHost
+let minioPort
+let minioProtocols = []
+
+if (minioEndpoint) {
+  let endpoint = minioEndpoint
+  if (endpoint.startsWith("http://")) {
+    minioProtocols = ["http"]
+  } else if (endpoint.startsWith("https://")) {
+    minioProtocols = ["https"]
+  } else {
+    minioProtocols = ["http", "https"]
+    endpoint = `https://${endpoint}`
+  }
+
+  try {
+    const parsed = new URL(endpoint)
+    minioHost = parsed.hostname
+    minioPort = parsed.port || undefined
+  } catch (error) {
+    console.warn("Invalid NEXT_PUBLIC_MINIO_ENDPOINT value:", minioEndpoint)
+  }
+}
+
+const minioPatterns = minioHost
+  ? minioProtocols.map((protocol) => ({
+      protocol,
+      hostname: minioHost,
+      ...(minioPort ? { port: minioPort } : {}),
+    }))
+  : []
 
 /**
  * @type {import('next').NextConfig}
@@ -43,10 +75,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "medusa-server-testing.s3.us-east-1.amazonaws.com",
       },
-      ...(process.env.NEXT_PUBLIC_MINIO_ENDPOINT ? [{ // Note: needed when using MinIO bucket storage for media
-        protocol: "https",
-        hostname: process.env.NEXT_PUBLIC_MINIO_ENDPOINT,
-      }] : []),
+      ...minioPatterns, // Note: needed when using MinIO bucket storage for media
     ],
   }
 }
