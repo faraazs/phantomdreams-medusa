@@ -7,7 +7,7 @@ import omit from "lodash/omit"
 import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { getAuthHeaders, getCartId, removeCartId, setCartId } from "./cookies"
-import { getProductsById } from "./products"
+import { getProductsById, PRODUCT_LINE_ITEM_FIELDS } from "./products"
 import { getRegion } from "./regions"
 
 export async function retrieveCart() {
@@ -145,13 +145,9 @@ export async function deleteLineItem(lineId: string) {
   revalidateTag("cart", "default")
 }
 
-export async function enrichLineItems(
-  lineItems:
-    | HttpTypes.StoreCartLineItem[]
-    | HttpTypes.StoreOrderLineItem[]
-    | null,
-  regionId: string
-) {
+export async function enrichLineItems<
+  T extends HttpTypes.StoreCartLineItem | HttpTypes.StoreOrderLineItem
+>(lineItems: T[] | null, regionId: string): Promise<T[]> {
   if (!lineItems) return []
 
   // Prepare query parameters
@@ -161,7 +157,10 @@ export async function enrichLineItems(
   }
 
   // Fetch products by their IDs
-  const products = await getProductsById(queryParams)
+  const products = await getProductsById({
+    ...queryParams,
+    fields: PRODUCT_LINE_ITEM_FIELDS,
+  })
   // If there are no line items or products, return an empty array
   if (!lineItems?.length || !products) {
     return []
@@ -186,8 +185,8 @@ export async function enrichLineItems(
         ...variant,
         product: omit(product, "variants"),
       },
-    }
-  }) as HttpTypes.StoreCartLineItem[]
+    } as T
+  })
 
   return enrichedItems
 }

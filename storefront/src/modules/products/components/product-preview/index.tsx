@@ -4,7 +4,7 @@ import { getProductPrice } from "@lib/util/get-product-price"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "../thumbnail"
 import PreviewPrice from "./price"
-import { getProductsById } from "@lib/data/products"
+import { getProductsById, PRODUCT_PRICE_FIELDS } from "@lib/data/products"
 import { HttpTypes } from "@medusajs/types"
 
 export default async function ProductPreview({
@@ -19,6 +19,7 @@ export default async function ProductPreview({
   const [pricedProduct] = await getProductsById({
     ids: [product.id!],
     regionId: region.id,
+    fields: PRODUCT_PRICE_FIELDS,
   })
 
   if (!pricedProduct) {

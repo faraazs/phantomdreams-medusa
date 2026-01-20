@@ -2,6 +2,12 @@ const checkEnvVariables = require("./check-env-variables")
 
 checkEnvVariables()
 
+const medusaBackendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
+const medusaBackendHost = medusaBackendUrl?.replace(/^https?:\/\//, "")
+const medusaBackendProtocol = medusaBackendUrl?.startsWith("https")
+  ? "https"
+  : "http"
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -21,10 +27,10 @@ const nextConfig = {
         protocol: process.env.NEXT_PUBLIC_BASE_URL?.startsWith('https') ? 'https' : 'http',
         hostname: process.env.NEXT_PUBLIC_BASE_URL?.replace(/^https?:\/\//, ''),
       },
-      { // Note: only needed when using local-file for product media
-        protocol: "https",
-        hostname: process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL?.replace('https://', ''),
-      },
+      ...(medusaBackendHost ? [{ // Note: only needed when using local-file for product media
+        protocol: medusaBackendProtocol,
+        hostname: medusaBackendHost,
+      }] : []),
       { // Note: can be removed after deleting demo products
         protocol: "https",
         hostname: "medusa-public-images.s3.eu-west-1.amazonaws.com",

@@ -13,6 +13,8 @@ import MobileActions from "./mobile-actions"
 import ProductPrice from "../product-price"
 import { addToCart } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { queryKeys } from "@lib/utils/query-keys"
 
 type ProductActionsProps = {
   product: HttpTypes.StoreProduct
@@ -35,8 +37,8 @@ export default function ProductActions({
   disabled,
 }: ProductActionsProps) {
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
-  const [isAdding, setIsAdding] = useState(false)
   const countryCode = useParams().countryCode as string
+  const queryClient = useQueryClient()
 
   // If there is only 1 variant, preselect the options
   useEffect(() => {
@@ -94,18 +96,21 @@ export default function ProductActions({
   const inView = useIntersection(actionsRef, "0px")
 
   // add the selected variant to the cart
+  const addToCartMutation = useMutation({
+    mutationFn: addToCart,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.cart() })
+    },
+  })
+
   const handleAddToCart = async () => {
     if (!selectedVariant?.id) return null
 
-    setIsAdding(true)
-
-    await addToCart({
+    await addToCartMutation.mutateAsync({
       variantId: selectedVariant.id,
       quantity: 1,
       countryCode,
     })
-
-    setIsAdding(false)
   }
 
   return (
@@ -123,7 +128,7 @@ export default function ProductActions({
                       updateOption={setOptionValue}
                       title={option.title ?? ""}
                       data-testid="product-options"
-                      disabled={!!disabled || isAdding}
+                      disabled={!!disabled || addToCartMutation.isPending}
                     />
                   </div>
                 )
@@ -137,10 +142,12 @@ export default function ProductActions({
 
         <Button
           onClick={handleAddToCart}
-          disabled={!inStock || !selectedVariant || !!disabled || isAdding}
+          disabled={
+            !inStock || !selectedVariant || !!disabled || addToCartMutation.isPending
+          }
           variant="primary"
           className="w-full h-10"
-          isLoading={isAdding}
+          isLoading={addToCartMutation.isPending}
           data-testid="add-product-button"
         >
           {!selectedVariant
@@ -156,9 +163,9 @@ export default function ProductActions({
           updateOptions={setOptionValue}
           inStock={inStock}
           handleAddToCart={handleAddToCart}
-          isAdding={isAdding}
+          isAdding={addToCartMutation.isPending}
           show={!inView}
-          optionsDisabled={!!disabled || isAdding}
+          optionsDisabled={!!disabled || addToCartMutation.isPending}
         />
       </div>
     </>

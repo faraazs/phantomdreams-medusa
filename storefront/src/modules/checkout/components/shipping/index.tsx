@@ -12,6 +12,8 @@ import { useEffect, useState } from "react"
 import { setShippingMethod } from "@lib/data/cart"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
+import { useQueryClient } from "@tanstack/react-query"
+import { queryKeys } from "@lib/utils/query-keys"
 
 type ShippingProps = {
   cart: HttpTypes.StoreCart
@@ -24,6 +26,7 @@ const Shipping: React.FC<ShippingProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -46,13 +49,14 @@ const Shipping: React.FC<ShippingProps> = ({
 
   const set = async (id: string) => {
     setIsLoading(true)
-    await setShippingMethod({ cartId: cart.id, shippingMethodId: id })
-      .catch((err) => {
-        setError(err.message)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
+    try {
+      await setShippingMethod({ cartId: cart.id, shippingMethodId: id })
+      await queryClient.invalidateQueries({ queryKey: queryKeys.cart() })
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {

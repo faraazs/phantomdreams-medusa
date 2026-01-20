@@ -1,8 +1,7 @@
 "use client"
 
 import { Badge, Heading, Input, Label, Text, Tooltip } from "@medusajs/ui"
-import React from "react"
-import { useFormState } from "react-dom"
+import React, { useActionState } from "react"
 
 import { applyPromotions, submitPromotionForm } from "@lib/data/cart"
 import { convertToLocale } from "@lib/util/money"
@@ -11,6 +10,8 @@ import { HttpTypes } from "@medusajs/types"
 import Trash from "@modules/common/icons/trash"
 import ErrorMessage from "../error-message"
 import { SubmitButton } from "../submit-button"
+import { useQueryClient } from "@tanstack/react-query"
+import { queryKeys } from "@lib/utils/query-keys"
 
 type DiscountCodeProps = {
   cart: HttpTypes.StoreCart & {
@@ -20,6 +21,7 @@ type DiscountCodeProps = {
 
 const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
   const [isOpen, setIsOpen] = React.useState(false)
+  const queryClient = useQueryClient()
 
   const { items = [], promotions = [] } = cart
   const removePromotionCode = async (code: string) => {
@@ -30,6 +32,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
     await applyPromotions(
       validPromotions.filter((p) => p.code === undefined).map((p) => p.code!)
     )
+    await queryClient.invalidateQueries({ queryKey: queryKeys.cart() })
   }
 
   const addPromotionCode = async (formData: FormData) => {
@@ -44,13 +47,14 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
     codes.push(code.toString())
 
     await applyPromotions(codes)
+    await queryClient.invalidateQueries({ queryKey: queryKeys.cart() })
 
     if (input) {
       input.value = ""
     }
   }
 
-  const [message, formAction] = useFormState(submitPromotionForm, null)
+  const [message, formAction] = useActionState(submitPromotionForm, null)
 
   return (
     <div className="w-full bg-white flex flex-col">

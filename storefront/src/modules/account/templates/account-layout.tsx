@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react"
 
 import UnderlineLink from "@modules/common/components/interactive-link"

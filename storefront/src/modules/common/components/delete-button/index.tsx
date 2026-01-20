@@ -2,6 +2,8 @@ import { deleteLineItem } from "@lib/data/cart"
 import { Spinner, Trash } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
 import { useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import { queryKeys } from "@lib/utils/query-keys"
 
 const DeleteButton = ({
   id,
@@ -13,12 +15,17 @@ const DeleteButton = ({
   className?: string
 }) => {
   const [isDeleting, setIsDeleting] = useState(false)
+  const queryClient = useQueryClient()
 
   const handleDelete = async (id: string) => {
     setIsDeleting(true)
-    await deleteLineItem(id).catch((err) => {
+    try {
+      await deleteLineItem(id)
+      await queryClient.invalidateQueries({ queryKey: queryKeys.cart() })
+    } catch (err) {
       setIsDeleting(false)
-    })
+    }
+    setIsDeleting(false)
   }
 
   return (

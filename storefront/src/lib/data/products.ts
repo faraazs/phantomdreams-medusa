@@ -5,19 +5,86 @@ import { getRegion } from "./regions"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import { sortProducts } from "@lib/util/sort-products"
 
+export const PRODUCT_LIST_FIELDS = [
+  "id",
+  "handle",
+  "title",
+  "thumbnail",
+  "*images",
+  "*variants.calculated_price",
+].join(",")
+
+export const PRODUCT_DETAIL_FIELDS = [
+  "id",
+  "handle",
+  "title",
+  "description",
+  "thumbnail",
+  "collection_id",
+  "material",
+  "origin_country",
+  "weight",
+  "length",
+  "width",
+  "height",
+  "*collection",
+  "*images",
+  "*tags",
+  "*type",
+  "*options",
+  "*variants.options",
+  "variants.id",
+  "variants.sku",
+  "variants.title",
+  "variants.manage_inventory",
+  "variants.allow_backorder",
+  "*variants.calculated_price",
+  "+variants.inventory_quantity",
+].join(",")
+
+export const PRODUCT_PRICE_FIELDS = ["id", "*variants.calculated_price"].join(",")
+
+export const PRODUCT_ACTION_FIELDS = [
+  "id",
+  "handle",
+  "title",
+  "*options",
+  "*variants.options",
+  "variants.id",
+  "variants.sku",
+  "variants.title",
+  "variants.manage_inventory",
+  "variants.allow_backorder",
+  "*variants.calculated_price",
+  "+variants.inventory_quantity",
+].join(",")
+
+export const PRODUCT_LINE_ITEM_FIELDS = [
+  "id",
+  "handle",
+  "thumbnail",
+  "*images",
+  "variants.id",
+  "variants.title",
+  "variants.manage_inventory",
+  "*variants.calculated_price",
+].join(",")
+
 export const getProductsById = cache(async function ({
   ids,
   regionId,
+  fields,
 }: {
   ids: string[]
   regionId: string
+  fields?: string
 }) {
   return sdk.store.product
     .list(
       {
         id: ids,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity",
+        fields: fields ?? PRODUCT_PRICE_FIELDS,
       },
       { next: { tags: ["products"], revalidate: 300 } as any }
     )
@@ -26,14 +93,15 @@ export const getProductsById = cache(async function ({
 
 export const getProductByHandle = cache(async function (
   handle: string,
-  regionId: string
+  regionId: string,
+  fields: string = PRODUCT_DETAIL_FIELDS
 ) {
   return sdk.store.product
     .list(
       {
         handle,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity",
+        fields,
       },
       { next: { tags: ["products"], revalidate: 300 } as any }
     )
@@ -64,14 +132,16 @@ export const getProductsList = cache(async function ({
       nextPage: null,
     }
   }
+  const { fields, ...restQueryParams } = queryParams ?? {}
+
   return sdk.store.product
     .list(
       {
         limit,
         offset,
         region_id: region.id,
-        fields: "*variants.calculated_price",
-        ...queryParams,
+        fields: fields ?? PRODUCT_LIST_FIELDS,
+        ...restQueryParams,
       },
       { next: { tags: ["products"], revalidate: 300 } as any }
     )
