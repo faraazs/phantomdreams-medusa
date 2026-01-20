@@ -108,60 +108,17 @@ export const getProductByHandle = cache(async function (
   regionId: string,
   fields: string = PRODUCT_DETAIL_FIELDS
 ) {
-  const normalizedHandle = (() => {
-    try {
-      return decodeURIComponent(handle).toLowerCase()
-    } catch {
-      return handle.toLowerCase()
-    }
-  })()
-
-  const initialResponse = await sdk.store.product.list(
+  const { products } = await sdk.store.product.list(
     {
-      handle: normalizedHandle,
+      handle: [handle],
       region_id: regionId,
       fields,
-      limit: 1,
       ...salesChannelParam,
     },
     { next: { tags: ["products"], revalidate: 300 } as any }
   )
 
-  const initialProduct = initialResponse.products?.[0]
-
-  if (initialProduct?.handle?.toLowerCase() === normalizedHandle) {
-    return initialProduct
-  }
-
-  const pageLimit = 100
-  let offset = 0
-
-  while (true) {
-    const { products, count } = await sdk.store.product.list(
-      {
-        region_id: regionId,
-        fields,
-        limit: pageLimit,
-        offset,
-        ...salesChannelParam,
-      },
-      { next: { tags: ["products"], revalidate: 300 } as any }
-    )
-
-    const matchedProduct = products.find(
-      (product) => product.handle?.toLowerCase() === normalizedHandle
-    )
-    if (matchedProduct) {
-      return matchedProduct
-    }
-
-    offset += pageLimit
-    if (!products.length || offset >= count) {
-      break
-    }
-  }
-
-  return null
+  return products[0] || null
 })
 
 export const getProductsList = cache(async function ({
