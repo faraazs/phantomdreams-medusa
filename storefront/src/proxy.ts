@@ -6,44 +6,34 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
 
-const regionMapCache = {
-  regionMap: new Map<string, HttpTypes.StoreRegion>(),
-  regionMapUpdated: Date.now(),
-}
-
 async function getRegionMap() {
-  const { regionMap, regionMapUpdated } = regionMapCache
-
-  if (
-    !regionMap.keys().next().value ||
-    regionMapUpdated < Date.now() - 3600 * 1000
-  ) {
-    // Fetch regions from Medusa. We can't use the JS client at the proxy layer.
-    const { regions } = await fetch(`${BACKEND_URL}/store/regions`, {
-      headers: {
-        "x-publishable-api-key": PUBLISHABLE_API_KEY!,
-      },
-      next: {
-        revalidate: 3600,
-        tags: ["regions"],
-      },
-    }).then((res) => res.json())
-
-    if (!regions?.length) {
-      notFound()
-    }
-
-    // Create a map of country codes to regions.
-    regions.forEach((region: HttpTypes.StoreRegion) => {
-      region.countries?.forEach((c) => {
-        regionMapCache.regionMap.set(c.iso_2 ?? "", region)
-      })
-    })
-
-    regionMapCache.regionMapUpdated = Date.now()
+  if (!BACKEND_URL || !PUBLISHABLE_API_KEY) {
+    throw new Error(
+      "Missing NEXT_PUBLIC_MEDUSA_BACKEND_URL or NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY"
+    )
   }
 
-  return regionMapCache.regionMap
+  // Fetch regions from Medusa. We can't use the JS client at the proxy layer.
+  const { regions } = await fetch(`${BACKEND_URL}/store/regions`, {
+    headers: {
+      "x-publishable-api-key": PUBLISHABLE_API_KEY!,
+    },
+    cache: "no-store",
+  }).then((res) => res.json())
+
+  if (!regions?.length) {
+    notFound()
+  }
+
+  // Create a map of country codes to regions.
+  const regionMap = new Map<string, HttpTypes.StoreRegion>()
+  regions.forEach((region: HttpTypes.StoreRegion) => {
+    region.countries?.forEach((c) => {
+      regionMap.set(c.iso_2 ?? "", region)
+    })
+  })
+
+  return regionMap
 }
 
 /**
