@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useActionState, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { PencilSquare as Edit, Trash } from "@medusajs/icons"
 import { Button, Heading, Text, clx } from "@medusajs/ui"
 
@@ -12,9 +12,9 @@ import Spinner from "@modules/common/icons/spinner"
 import { SubmitButton } from "@modules/checkout/components/submit-button"
 import { HttpTypes } from "@medusajs/types"
 import {
-  deleteCustomerAddress,
-  updateCustomerAddress,
-} from "@lib/data/customer"
+  useDeleteCustomerAddress,
+  useUpdateCustomerAddress,
+} from "@lib/hooks/use-customer-mutations"
 
 type EditAddressProps = {
   region: HttpTypes.StoreRegion
@@ -29,16 +29,14 @@ const EditAddress: React.FC<EditAddressProps> = ({
 }) => {
   const [removing, setRemoving] = useState(false)
   const [successState, setSuccessState] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const { state, open, close: closeModal } = useToggleState(false)
-
-  const [formState, formAction] = useActionState(updateCustomerAddress, {
-    success: false,
-    error: null,
-    addressId: address.id,
-  })
+  const updateCustomerAddressMutation = useUpdateCustomerAddress()
+  const deleteCustomerAddressMutation = useDeleteCustomerAddress()
 
   const close = () => {
     setSuccessState(false)
+    setErrorMessage(null)
     closeModal()
   }
 
@@ -49,16 +47,30 @@ const EditAddress: React.FC<EditAddressProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [successState])
 
-  useEffect(() => {
-    if (formState.success) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setErrorMessage(null)
+    setSuccessState(false)
+
+    const formData = new FormData(event.currentTarget)
+    try {
+      await updateCustomerAddressMutation.mutateAsync({
+        addressId: address.id,
+        formData,
+      })
       setSuccessState(true)
+    } catch (err: any) {
+      setErrorMessage(err?.message ?? err?.toString() ?? "Unable to update address.")
     }
-  }, [formState])
+  }
 
   const removeAddress = async () => {
     setRemoving(true)
-    await deleteCustomerAddress(address.id)
-    setRemoving(false)
+    try {
+      await deleteCustomerAddressMutation.mutateAsync({ addressId: address.id })
+    } finally {
+      setRemoving(false)
+    }
   }
 
   return (
@@ -125,7 +137,7 @@ const EditAddress: React.FC<EditAddressProps> = ({
         <Modal.Title>
           <Heading className="mb-2">Edit address</Heading>
         </Modal.Title>
-        <form action={formAction}>
+        <form onSubmit={handleSubmit}>
           <Modal.Body>
             <div className="grid grid-cols-1 gap-y-2">
               <div className="grid grid-cols-2 gap-x-2">
@@ -209,9 +221,9 @@ const EditAddress: React.FC<EditAddressProps> = ({
                 data-testid="phone-input"
               />
             </div>
-            {formState.error && (
+            {errorMessage && (
               <div className="text-rose-500 text-small-regular py-2">
-                {formState.error}
+                {errorMessage}
               </div>
             )}
           </Modal.Body>
@@ -226,7 +238,12 @@ const EditAddress: React.FC<EditAddressProps> = ({
               >
                 Cancel
               </Button>
-              <SubmitButton data-testid="save-button">Save</SubmitButton>
+              <SubmitButton
+                data-testid="save-button"
+                isLoading={updateCustomerAddressMutation.isPending}
+              >
+                Save
+              </SubmitButton>
             </div>
           </Modal.Footer>
         </form>

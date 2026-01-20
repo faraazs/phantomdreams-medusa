@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState } from "react"
+import React, { useCallback } from "react"
 
 import { CheckCircleSolid } from "@medusajs/icons"
 import { Heading, Text, useToggleState } from "@medusajs/ui"
@@ -9,7 +9,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import Divider from "@modules/common/components/divider"
 import Spinner from "@modules/common/icons/spinner"
 
-import { setAddresses } from "@lib/data/cart"
+import { useSetAddresses } from "@lib/hooks/use-cart-mutations"
 import compareAddresses from "@lib/util/compare-addresses"
 import { HttpTypes } from "@medusajs/types"
 import BillingAddress from "../billing_address"
@@ -40,7 +40,26 @@ const Addresses = ({
     router.push(pathname + "?step=address")
   }
 
-  const [message, formAction] = useActionState(setAddresses, null)
+  const setAddressesMutation = useSetAddresses()
+
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault()
+      const formData = new FormData(event.currentTarget)
+
+      try {
+        await setAddressesMutation.mutateAsync(formData)
+        router.push(pathname + "?step=delivery")
+      } catch {
+        // Mutation errors are surfaced via error state.
+      }
+    },
+    [setAddressesMutation, router, pathname]
+  )
+
+  const errorMessage = setAddressesMutation.error
+    ? (setAddressesMutation.error as Error).message
+    : null
 
   return (
     <div className="bg-white">
@@ -65,7 +84,7 @@ const Addresses = ({
         )}
       </div>
       {isOpen ? (
-        <form action={formAction}>
+        <form onSubmit={handleSubmit}>
           <div className="pb-8">
             <ShippingAddress
               customer={customer}
@@ -86,10 +105,17 @@ const Addresses = ({
                 <BillingAddress cart={cart} />
               </div>
             )}
-            <SubmitButton className="mt-6" data-testid="submit-address-button">
+            <SubmitButton
+              className="mt-6"
+              data-testid="submit-address-button"
+              isLoading={setAddressesMutation.isPending}
+            >
               Continue to delivery
             </SubmitButton>
-            <ErrorMessage error={message} data-testid="address-error-message" />
+            <ErrorMessage
+              error={errorMessage}
+              data-testid="address-error-message"
+            />
           </div>
         </form>
       ) : (

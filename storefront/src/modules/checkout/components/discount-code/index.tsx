@@ -1,17 +1,15 @@
 "use client"
 
 import { Badge, Heading, Input, Label, Text, Tooltip } from "@medusajs/ui"
-import React, { useActionState } from "react"
+import React from "react"
 
-import { applyPromotions, submitPromotionForm } from "@lib/data/cart"
+import { useApplyPromotions } from "@lib/hooks/use-cart-mutations"
 import { convertToLocale } from "@lib/util/money"
 import { InformationCircleSolid } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import Trash from "@modules/common/icons/trash"
 import ErrorMessage from "../error-message"
 import { SubmitButton } from "../submit-button"
-import { useQueryClient } from "@tanstack/react-query"
-import { queryKeys } from "@lib/utils/query-keys"
 
 type DiscountCodeProps = {
   cart: HttpTypes.StoreCart & {
@@ -21,18 +19,24 @@ type DiscountCodeProps = {
 
 const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
   const [isOpen, setIsOpen] = React.useState(false)
-  const queryClient = useQueryClient()
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const applyPromotionsMutation = useApplyPromotions()
 
-  const { items = [], promotions = [] } = cart
+  const { promotions = [] } = cart
   const removePromotionCode = async (code: string) => {
     const validPromotions = promotions.filter(
       (promotion) => promotion.code !== code
     )
-
-    await applyPromotions(
-      validPromotions.filter((p) => p.code === undefined).map((p) => p.code!)
-    )
-    await queryClient.invalidateQueries({ queryKey: queryKeys.cart() })
+    setErrorMessage(null)
+    try {
+      await applyPromotionsMutation.mutateAsync({
+        codes: validPromotions
+          .map((promotion) => promotion.code)
+          .filter((promotionCode): promotionCode is string => Boolean(promotionCode)),
+      })
+    } catch (error: any) {
+      setErrorMessage(error?.message ?? "Unable to update promotions.")
+    }
   }
 
   const addPromotionCode = async (formData: FormData) => {
@@ -42,19 +46,21 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
     }
     const input = document.getElementById("promotion-input") as HTMLInputElement
     const codes = promotions
-      .filter((p) => p.code === undefined)
-      .map((p) => p.code!)
+      .map((promotion) => promotion.code)
+      .filter((promotionCode): promotionCode is string => Boolean(promotionCode))
     codes.push(code.toString())
 
-    await applyPromotions(codes)
-    await queryClient.invalidateQueries({ queryKey: queryKeys.cart() })
+    setErrorMessage(null)
+    try {
+      await applyPromotionsMutation.mutateAsync({ codes })
+    } catch (error: any) {
+      setErrorMessage(error?.message ?? "Unable to apply promotion code.")
+    }
 
     if (input) {
       input.value = ""
     }
   }
-
-  const [message, formAction] = useActionState(submitPromotionForm, null)
 
   return (
     <div className="w-full bg-white flex flex-col">
@@ -89,13 +95,14 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                 <SubmitButton
                   variant="secondary"
                   data-testid="discount-apply-button"
+                  isLoading={applyPromotionsMutation.isPending}
                 >
                   Apply
                 </SubmitButton>
               </div>
 
               <ErrorMessage
-                error={message}
+                error={errorMessage}
                 data-testid="discount-error-message"
               />
             </>

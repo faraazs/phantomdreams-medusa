@@ -11,10 +11,8 @@ import OptionSelect from "@modules/products/components/product-actions/option-se
 
 import MobileActions from "./mobile-actions"
 import ProductPrice from "../product-price"
-import { addToCart } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { queryKeys } from "@lib/utils/query-keys"
+import { useAddToCart } from "@lib/hooks/use-cart-mutations"
 
 type ProductActionsProps = {
   product: HttpTypes.StoreProduct
@@ -38,7 +36,7 @@ export default function ProductActions({
 }: ProductActionsProps) {
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
   const countryCode = useParams().countryCode as string
-  const queryClient = useQueryClient()
+  const addToCartMutation = useAddToCart()
 
   // If there is only 1 variant, preselect the options
   useEffect(() => {
@@ -95,14 +93,6 @@ export default function ProductActions({
 
   const inView = useIntersection(actionsRef, "0px")
 
-  // add the selected variant to the cart
-  const addToCartMutation = useMutation({
-    mutationFn: addToCart,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.cart() })
-    },
-  })
-
   const handleAddToCart = async () => {
     if (!selectedVariant?.id) return null
 
@@ -110,6 +100,8 @@ export default function ProductActions({
       variantId: selectedVariant.id,
       quantity: 1,
       countryCode,
+      product,
+      variant: selectedVariant,
     })
   }
 

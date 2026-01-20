@@ -1,13 +1,13 @@
 "use client"
 
-import React, { useActionState, useEffect, useMemo } from "react"
+import React, { useMemo } from "react"
 
 import Input from "@modules/common/components/input"
 import NativeSelect from "@modules/common/components/native-select"
 
 import AccountInfo from "../account-info"
 import { HttpTypes } from "@medusajs/types"
-import { updateCustomerAddress } from "@lib/data/customer"
+import { useUpdateCustomerAddress } from "@lib/hooks/use-customer-mutations"
 
 type MyInformationProps = {
   customer: HttpTypes.StoreCustomer
@@ -32,19 +32,36 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
   }, [regions])
 
   const [successState, setSuccessState] = React.useState(false)
+  const [error, setError] = React.useState<string | null>(null)
+  const updateCustomerAddressMutation = useUpdateCustomerAddress()
 
-  const [state, formAction] = useActionState(updateCustomerAddress, {
-    error: false,
-    success: false,
-  })
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setError(null)
+    setSuccessState(false)
+
+    if (!billingAddress?.id) {
+      setError("No billing address found.")
+      return
+    }
+
+    const formData = new FormData(event.currentTarget)
+
+    try {
+      await updateCustomerAddressMutation.mutateAsync({
+        addressId: billingAddress.id,
+        formData,
+      })
+      setSuccessState(true)
+    } catch (err: any) {
+      setError(err?.message ?? err?.toString() ?? "Unable to update address.")
+    }
+  }
 
   const clearState = () => {
     setSuccessState(false)
+    setError(null)
   }
-
-  useEffect(() => {
-    setSuccessState(state.success)
-  }, [state])
 
   const billingAddress = customer.addresses?.find(
     (addr) => addr.is_default_billing
@@ -79,12 +96,14 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
   }, [billingAddress, regionOptions])
 
   return (
-    <form action={formAction} onReset={() => clearState()} className="w-full">
+    <form onSubmit={handleSubmit} onReset={() => clearState()} className="w-full">
       <AccountInfo
         label="Billing address"
         currentInfo={currentInfo}
         isSuccess={successState}
-        isError={!!state.error}
+        isError={Boolean(error)}
+        errorMessage={error ?? undefined}
+        isSaving={updateCustomerAddressMutation.isPending}
         clearState={clearState}
         data-testid="account-billing-address-editor"
       >

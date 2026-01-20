@@ -138,18 +138,27 @@ export const updateCustomerAddress = async (
   formData: FormData
 ): Promise<any> => {
   const addressId = currentState.addressId as string
+  const getValue = (key: string) => {
+    const value = formData.get(key)
+    if (typeof value === "string") {
+      return value
+    }
+
+    const prefixedValue = formData.get(`billing_address.${key}`)
+    return typeof prefixedValue === "string" ? prefixedValue : undefined
+  }
 
   const address = {
-    first_name: formData.get("first_name") as string,
-    last_name: formData.get("last_name") as string,
-    company: formData.get("company") as string,
-    address_1: formData.get("address_1") as string,
-    address_2: formData.get("address_2") as string,
-    city: formData.get("city") as string,
-    postal_code: formData.get("postal_code") as string,
-    province: formData.get("province") as string,
-    country_code: formData.get("country_code") as string,
-    phone: formData.get("phone") as string,
+    first_name: getValue("first_name"),
+    last_name: getValue("last_name"),
+    company: getValue("company"),
+    address_1: getValue("address_1"),
+    address_2: getValue("address_2"),
+    city: getValue("city"),
+    postal_code: getValue("postal_code"),
+    province: getValue("province"),
+    country_code: getValue("country_code"),
+    phone: getValue("phone"),
   }
 
   return sdk.store.customer

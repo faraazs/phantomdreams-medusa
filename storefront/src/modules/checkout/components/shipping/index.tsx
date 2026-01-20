@@ -9,11 +9,9 @@ import Radio from "@modules/common/components/radio"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
-import { setShippingMethod } from "@lib/data/cart"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
-import { useQueryClient } from "@tanstack/react-query"
-import { queryKeys } from "@lib/utils/query-keys"
+import { useSetShippingMethod } from "@lib/hooks/use-cart-mutations"
 
 type ShippingProps = {
   cart: HttpTypes.StoreCart
@@ -24,9 +22,8 @@ const Shipping: React.FC<ShippingProps> = ({
   cart,
   availableShippingMethods,
 }) => {
-  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const queryClient = useQueryClient()
+  const setShippingMethodMutation = useSetShippingMethod()
 
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -48,14 +45,17 @@ const Shipping: React.FC<ShippingProps> = ({
   }
 
   const set = async (id: string) => {
-    setIsLoading(true)
+    const selectedOption =
+      availableShippingMethods?.find((option) => option.id === id) ?? null
+    setError(null)
     try {
-      await setShippingMethod({ cartId: cart.id, shippingMethodId: id })
-      await queryClient.invalidateQueries({ queryKey: queryKeys.cart() })
+      await setShippingMethodMutation.mutateAsync({
+        cartId: cart.id,
+        shippingMethodId: id,
+        shippingOption: selectedOption,
+      })
     } catch (err: any) {
       setError(err.message)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -141,7 +141,7 @@ const Shipping: React.FC<ShippingProps> = ({
             size="large"
             className="mt-6"
             onClick={handleSubmit}
-            isLoading={isLoading}
+            isLoading={setShippingMethodMutation.isPending}
             disabled={!cart.shipping_methods?.[0]}
             data-testid="submit-delivery-option-button"
           >

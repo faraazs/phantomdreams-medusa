@@ -11,6 +11,7 @@ type AccountInfoProps = {
   isSuccess?: boolean
   isError?: boolean
   errorMessage?: string
+  isSaving?: boolean
   clearState: () => void
   children?: React.ReactNode
   'data-testid'?: string
@@ -21,6 +22,7 @@ const AccountInfo = ({
   currentInfo,
   isSuccess,
   isError,
+  isSaving,
   clearState,
   errorMessage = "An error occurred, please try again",
   children,
@@ -29,6 +31,7 @@ const AccountInfo = ({
   const { state, close, toggle } = useToggleState()
 
   const { pending } = useFormStatus()
+  const resolvedPending = isSaving ?? pending
 
   const handleToggle = () => {
     clearState()
@@ -121,7 +124,7 @@ const AccountInfo = ({
             <div>{children}</div>
             <div className="flex items-center justify-end mt-2">
               <Button
-                isLoading={pending}
+                isLoading={resolvedPending}
                 className="w-full small:max-w-[140px]"
                 type="submit"
                 data-testid="save-button"

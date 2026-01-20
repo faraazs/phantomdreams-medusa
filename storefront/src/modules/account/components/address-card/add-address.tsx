@@ -2,7 +2,7 @@
 
 import { Plus } from "@medusajs/icons"
 import { Button, Heading } from "@medusajs/ui"
-import { useActionState, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import useToggleState from "@lib/hooks/use-toggle-state"
 import CountrySelect from "@modules/checkout/components/country-select"
@@ -10,16 +10,13 @@ import Input from "@modules/common/components/input"
 import Modal from "@modules/common/components/modal"
 import { SubmitButton } from "@modules/checkout/components/submit-button"
 import { HttpTypes } from "@medusajs/types"
-import { addCustomerAddress } from "@lib/data/customer"
+import { useAddCustomerAddress } from "@lib/hooks/use-customer-mutations"
 
 const AddAddress = ({ region }: { region: HttpTypes.StoreRegion }) => {
   const [successState, setSuccessState] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const { state, open, close: closeModal } = useToggleState(false)
-
-  const [formState, formAction] = useActionState(addCustomerAddress, {
-    success: false,
-    error: null,
-  })
+  const addCustomerAddressMutation = useAddCustomerAddress()
 
   const close = () => {
     setSuccessState(false)
@@ -33,11 +30,19 @@ const AddAddress = ({ region }: { region: HttpTypes.StoreRegion }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [successState])
 
-  useEffect(() => {
-    if (formState.success) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setErrorMessage(null)
+    setSuccessState(false)
+
+    const formData = new FormData(event.currentTarget)
+    try {
+      await addCustomerAddressMutation.mutateAsync(formData)
       setSuccessState(true)
+    } catch (err: any) {
+      setErrorMessage(err?.message ?? err?.toString() ?? "Unable to add address.")
     }
-  }, [formState])
+  }
 
   return (
     <>
@@ -54,7 +59,7 @@ const AddAddress = ({ region }: { region: HttpTypes.StoreRegion }) => {
         <Modal.Title>
           <Heading className="mb-2">Add address</Heading>
         </Modal.Title>
-        <form action={formAction}>
+        <form onSubmit={handleSubmit}>
           <Modal.Body>
             <div className="flex flex-col gap-y-2">
               <div className="grid grid-cols-2 gap-x-2">
@@ -128,12 +133,12 @@ const AddAddress = ({ region }: { region: HttpTypes.StoreRegion }) => {
                 data-testid="phone-input"
               />
             </div>
-            {formState.error && (
+            {errorMessage && (
               <div
                 className="text-rose-500 text-small-regular py-2"
                 data-testid="address-error"
               >
-                {formState.error}
+                {errorMessage}
               </div>
             )}
           </Modal.Body>
@@ -148,7 +153,12 @@ const AddAddress = ({ region }: { region: HttpTypes.StoreRegion }) => {
               >
                 Cancel
               </Button>
-              <SubmitButton data-testid="save-button">Save</SubmitButton>
+              <SubmitButton
+                data-testid="save-button"
+                isLoading={addCustomerAddressMutation.isPending}
+              >
+                Save
+              </SubmitButton>
             </div>
           </Modal.Footer>
         </form>

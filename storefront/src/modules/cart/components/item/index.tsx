@@ -2,7 +2,6 @@
 
 import { Table, Text, clx } from "@medusajs/ui"
 
-import { updateLineItem } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import CartItemSelect from "@modules/cart/components/cart-item-select"
 import ErrorMessage from "@modules/checkout/components/error-message"
@@ -14,8 +13,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import Spinner from "@modules/common/icons/spinner"
 import Thumbnail from "@modules/products/components/thumbnail"
 import { useState } from "react"
-import { useQueryClient } from "@tanstack/react-query"
-import { queryKeys } from "@lib/utils/query-keys"
+import { useUpdateLineItem } from "@lib/hooks/use-cart-mutations"
 
 type ItemProps = {
   item: HttpTypes.StoreCartLineItem
@@ -23,26 +21,20 @@ type ItemProps = {
 }
 
 const Item = ({ item, type = "full" }: ItemProps) => {
-  const [updating, setUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const queryClient = useQueryClient()
+  const updateLineItemMutation = useUpdateLineItem()
 
   const { handle } = item.variant?.product ?? {}
 
   const changeQuantity = async (quantity: number) => {
     setError(null)
-    setUpdating(true)
-
     try {
-      await updateLineItem({
+      await updateLineItemMutation.mutateAsync({
         lineId: item.id,
         quantity,
       })
-      await queryClient.invalidateQueries({ queryKey: queryKeys.cart() })
     } catch (err: any) {
       setError(err.message)
-    } finally {
-      setUpdating(false)
     }
   }
 
@@ -104,7 +96,7 @@ const Item = ({ item, type = "full" }: ItemProps) => {
                 1
               </option>
             </CartItemSelect>
-            {updating && <Spinner />}
+            {updateLineItemMutation.isPending && <Spinner />}
           </div>
           <ErrorMessage error={error} data-testid="product-error-message" />
         </Table.Cell>
