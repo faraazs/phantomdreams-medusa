@@ -96,16 +96,48 @@ export const getProductByHandle = cache(async function (
   regionId: string,
   fields: string = PRODUCT_DETAIL_FIELDS
 ) {
-  return sdk.store.product
-    .list(
+  const initialResponse = await sdk.store.product.list(
+    {
+      handle: [handle],
+      region_id: regionId,
+      fields,
+      limit: 1,
+    },
+    { next: { tags: ["products"], revalidate: 300 } as any }
+  )
+
+  const initialProduct = initialResponse.products?.[0]
+
+  if (initialProduct?.handle === handle) {
+    return initialProduct
+  }
+
+  const pageLimit = 100
+  let offset = 0
+
+  while (true) {
+    const { products, count } = await sdk.store.product.list(
       {
-        handle,
         region_id: regionId,
         fields,
+        limit: pageLimit,
+        offset,
       },
       { next: { tags: ["products"], revalidate: 300 } as any }
     )
-    .then(({ products }) => products[0])
+
+    const matchedProduct = products.find((product) => product.handle === handle)
+    if (matchedProduct) {
+      return matchedProduct
+    }
+
+    offset += pageLimit
+    if (!products.length || offset >= count) {
+      break
+    }
+  }
+
+  return null
 })
 
 export const getProductsList = cache(async function ({
