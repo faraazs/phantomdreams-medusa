@@ -30,8 +30,17 @@ export default async function ProductPreview({
     product: pricedProduct,
   })
 
+  const handle = product.handle ?? pricedProduct.handle
+
+  if (!handle) {
+    return null
+  }
+
   return (
-    <LocalizedClientLink href={`/products/${product.handle}`} className="group">
+    <LocalizedClientLink
+      href={`/products/${encodeURIComponent(handle)}`}
+      className="group"
+    >
       <div data-testid="product-wrapper">
         <Thumbnail
           thumbnail={product.thumbnail}

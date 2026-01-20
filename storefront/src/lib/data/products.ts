@@ -43,7 +43,11 @@ export const PRODUCT_DETAIL_FIELDS = [
   "+variants.inventory_quantity",
 ].join(",")
 
-export const PRODUCT_PRICE_FIELDS = ["id", "*variants.calculated_price"].join(",")
+export const PRODUCT_PRICE_FIELDS = [
+  "id",
+  "handle",
+  "*variants.calculated_price",
+].join(",")
 
 export const PRODUCT_ACTION_FIELDS = [
   "id",
@@ -98,9 +102,17 @@ export const getProductByHandle = cache(async function (
   regionId: string,
   fields: string = PRODUCT_DETAIL_FIELDS
 ) {
+  const normalizedHandle = (() => {
+    try {
+      return decodeURIComponent(handle).toLowerCase()
+    } catch {
+      return handle.toLowerCase()
+    }
+  })()
+
   const initialResponse = await sdk.store.product.list(
     {
-      handle: [handle],
+      handle: normalizedHandle,
       region_id: regionId,
       fields,
       limit: 1,
@@ -110,7 +122,7 @@ export const getProductByHandle = cache(async function (
 
   const initialProduct = initialResponse.products?.[0]
 
-  if (initialProduct?.handle === handle) {
+  if (initialProduct?.handle?.toLowerCase() === normalizedHandle) {
     return initialProduct
   }
 
@@ -128,7 +140,9 @@ export const getProductByHandle = cache(async function (
       { next: { tags: ["products"], revalidate: 300 } as any }
     )
 
-    const matchedProduct = products.find((product) => product.handle === handle)
+    const matchedProduct = products.find(
+      (product) => product.handle?.toLowerCase() === normalizedHandle
+    )
     if (matchedProduct) {
       return matchedProduct
     }
