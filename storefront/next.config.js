@@ -7,14 +7,10 @@ checkEnvVariables()
  */
 const nextConfig = {
   reactStrictMode: true,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: "http",
@@ -46,9 +42,6 @@ const nextConfig = {
         hostname: process.env.NEXT_PUBLIC_MINIO_ENDPOINT,
       }] : []),
     ],
-  },
-  serverRuntimeConfig: {
-    port: process.env.PORT || 3000
   }
 }
 

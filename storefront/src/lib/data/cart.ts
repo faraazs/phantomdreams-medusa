@@ -3,7 +3,7 @@
 import { sdk } from "@lib/config"
 import medusaError from "@lib/util/medusa-error"
 import { HttpTypes } from "@medusajs/types"
-import { omit } from "lodash"
+import omit from "lodash/omit"
 import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { getAuthHeaders, getCartId, removeCartId, setCartId } from "./cookies"
@@ -18,7 +18,7 @@ export async function retrieveCart() {
   }
 
   return await sdk.store.cart
-    .retrieve(cartId, {}, { next: { tags: ["cart"] }, ...(await getAuthHeaders()) })
+    .retrieve(cartId, {}, { next: { tags: ["cart"] }, cache: "no-store", ...(await getAuthHeaders()) })
     .then(({ cart }) => cart)
     .catch(() => {
       return null
@@ -37,7 +37,7 @@ export async function getOrSetCart(countryCode: string) {
     const cartResp = await sdk.store.cart.create({ region_id: region.id })
     cart = cartResp.cart
     await setCartId(cart.id)
-    revalidateTag("cart")
+    revalidateTag("cart", "default")
   }
 
   if (cart && cart?.region_id !== region.id) {
@@ -47,7 +47,7 @@ export async function getOrSetCart(countryCode: string) {
       {},
       await getAuthHeaders()
     )
-    revalidateTag("cart")
+    revalidateTag("cart", "default")
   }
 
   return cart
@@ -62,7 +62,7 @@ export async function updateCart(data: HttpTypes.StoreUpdateCart) {
   return sdk.store.cart
     .update(cartId, data, {}, await getAuthHeaders())
     .then(({ cart }) => {
-      revalidateTag("cart")
+      revalidateTag("cart", "default")
       return cart
     })
     .catch(medusaError)
@@ -97,7 +97,7 @@ export async function addToCart({
       await getAuthHeaders()
     )
     .then(() => {
-      revalidateTag("cart")
+      revalidateTag("cart", "default")
     })
     .catch(medusaError)
 }
@@ -121,7 +121,7 @@ export async function updateLineItem({
   await sdk.store.cart
     .updateLineItem(cartId, lineId, { quantity }, {}, await getAuthHeaders())
     .then(() => {
-      revalidateTag("cart")
+      revalidateTag("cart", "default")
     })
     .catch(medusaError)
 }
@@ -139,10 +139,10 @@ export async function deleteLineItem(lineId: string) {
   await sdk.store.cart
     .deleteLineItem(cartId, lineId, await getAuthHeaders())
     .then(() => {
-      revalidateTag("cart")
+      revalidateTag("cart", "default")
     })
     .catch(medusaError)
-  revalidateTag("cart")
+  revalidateTag("cart", "default")
 }
 
 export async function enrichLineItems(
@@ -207,7 +207,7 @@ export async function setShippingMethod({
       await getAuthHeaders()
     )
     .then(() => {
-      revalidateTag("cart")
+      revalidateTag("cart", "default")
     })
     .catch(medusaError)
 }
@@ -222,7 +222,7 @@ export async function initiatePaymentSession(
   return sdk.store.payment
     .initiatePaymentSession(cart, data, {}, await getAuthHeaders())
     .then((resp) => {
-      revalidateTag("cart")
+      revalidateTag("cart", "default")
       return resp
     })
     .catch(medusaError)
@@ -236,7 +236,7 @@ export async function applyPromotions(codes: string[]) {
 
   await updateCart({ promo_codes: codes })
     .then(() => {
-      revalidateTag("cart")
+      revalidateTag("cart", "default")
     })
     .catch(medusaError)
 }
@@ -358,7 +358,7 @@ export async function placeOrder() {
   const cartRes = await sdk.store.cart
     .complete(cartId, {}, await getAuthHeaders())
     .then((cartRes) => {
-      revalidateTag("cart")
+      revalidateTag("cart", "default")
       return cartRes
     })
     .catch(medusaError)
@@ -388,11 +388,11 @@ export async function updateRegion(countryCode: string, currentPath: string) {
 
   if (cartId) {
     await updateCart({ region_id: region.id })
-    revalidateTag("cart")
+    revalidateTag("cart", "default")
   }
 
-  revalidateTag("regions")
-  revalidateTag("products")
+  revalidateTag("regions", "default")
+  revalidateTag("products", "default")
 
   redirect(`/${countryCode}${currentPath}`)
 }

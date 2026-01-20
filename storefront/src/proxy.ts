@@ -18,7 +18,7 @@ async function getRegionMap() {
     !regionMap.keys().next().value ||
     regionMapUpdated < Date.now() - 3600 * 1000
   ) {
-    // Fetch regions from Medusa. We can't use the JS client here because middleware is running on Edge and the client needs a Node environment.
+    // Fetch regions from Medusa. We can't use the JS client at the proxy layer.
     const { regions } = await fetch(`${BACKEND_URL}/store/regions`, {
       headers: {
         "x-publishable-api-key": PUBLISHABLE_API_KEY!,
@@ -78,16 +78,16 @@ async function getCountryCode(
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
       console.error(
-        "Middleware.ts: Error getting the country code. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable?"
+        "proxy.ts: Error getting the country code. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable?"
       )
     }
   }
 }
 
 /**
- * Middleware to handle region selection and onboarding status.
+ * Proxy handler to manage region selection and onboarding status.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const isOnboarding = searchParams.get("onboarding") === "true"
   const cartId = searchParams.get("cart_id")

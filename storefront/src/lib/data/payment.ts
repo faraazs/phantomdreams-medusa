@@ -6,7 +6,7 @@ export const listCartPaymentMethods = cache(async function (regionId: string) {
   return sdk.store.payment
     .listPaymentProviders(
       { region_id: regionId },
-      { next: { tags: ["payment_providers"] } }
+      { next: { tags: ["payment_providers"], revalidate: 3600 } as any }
     )
     .then(({ payment_providers }) => payment_providers)
     .catch(() => {

@@ -10,7 +10,10 @@ import { getAuthHeaders, removeAuthToken, setAuthToken } from "./cookies"
 
 export const getCustomer = cache(async function () {
   return await sdk.store.customer
-    .retrieve({}, { next: { tags: ["customer"] }, ...getAuthHeaders() })
+    .retrieve(
+      {},
+      { next: { tags: ["customer"] }, cache: "no-store", ...(await getAuthHeaders()) }
+    )
     .then(({ customer }) => customer)
     .catch(() => null)
 })
@@ -19,11 +22,11 @@ export const updateCustomer = cache(async function (
   body: HttpTypes.StoreUpdateCustomer
 ) {
   const updateRes = await sdk.store.customer
-    .update(body, {}, getAuthHeaders())
+    .update(body, {}, await getAuthHeaders())
     .then(({ customer }) => customer)
     .catch(medusaError)
 
-  revalidateTag("customer")
+  revalidateTag("customer", "default")
   return updateRes
 })
 
@@ -57,7 +60,7 @@ export async function signup(_currentState: unknown, formData: FormData) {
 
     setAuthToken(typeof loginToken === 'string' ? loginToken : loginToken.location)
 
-    revalidateTag("customer")
+    revalidateTag("customer", "default")
     return createdCustomer
   } catch (error: any) {
     return error.toString()
@@ -73,7 +76,7 @@ export async function login(_currentState: unknown, formData: FormData) {
       .login("customer", "emailpass", { email, password })
       .then((token) => {
         setAuthToken(typeof token === 'string' ? token : token.location)
-        revalidateTag("customer")
+        revalidateTag("customer", "default")
       })
   } catch (error: any) {
     return error.toString()
@@ -83,8 +86,8 @@ export async function login(_currentState: unknown, formData: FormData) {
 export async function signout(countryCode: string) {
   await sdk.auth.logout()
   removeAuthToken()
-  revalidateTag("auth")
-  revalidateTag("customer")
+  revalidateTag("auth", "default")
+  revalidateTag("customer", "default")
   redirect(`/${countryCode}/account`)
 }
 
@@ -106,9 +109,9 @@ export const addCustomerAddress = async (
   }
 
   return sdk.store.customer
-    .createAddress(address, {}, getAuthHeaders())
+    .createAddress(address, {}, await getAuthHeaders())
     .then(({ customer }) => {
-      revalidateTag("customer")
+      revalidateTag("customer", "default")
       return { success: true, error: null }
     })
     .catch((err) => {
@@ -120,9 +123,9 @@ export const deleteCustomerAddress = async (
   addressId: string
 ): Promise<void> => {
   await sdk.store.customer
-    .deleteAddress(addressId, getAuthHeaders())
+    .deleteAddress(addressId, await getAuthHeaders())
     .then(() => {
-      revalidateTag("customer")
+      revalidateTag("customer", "default")
       return { success: true, error: null }
     })
     .catch((err) => {
@@ -150,9 +153,9 @@ export const updateCustomerAddress = async (
   }
 
   return sdk.store.customer
-    .updateAddress(addressId, address, {}, getAuthHeaders())
+    .updateAddress(addressId, address, {}, await getAuthHeaders())
     .then(() => {
-      revalidateTag("customer")
+      revalidateTag("customer", "default")
       return { success: true, error: null }
     })
     .catch((err) => {

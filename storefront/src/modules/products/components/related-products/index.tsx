@@ -9,6 +9,8 @@ type RelatedProductsProps = {
 }
 
 type StoreProductParamsWithTags = HttpTypes.StoreProductParams & {
+  collection_id?: string[]
+  is_giftcard?: boolean
   tags?: string[]
 }
 

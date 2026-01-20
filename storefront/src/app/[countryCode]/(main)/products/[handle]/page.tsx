@@ -5,6 +5,8 @@ import ProductTemplate from "@modules/products/templates"
 import { getRegion, listRegions } from "@lib/data/regions"
 import { getProductByHandle, getProductsList } from "@lib/data/products"
 
+const STATIC_PRODUCT_LIMIT = 50
+
 type Props = {
   params: { countryCode: string; handle: string }
 }
@@ -24,7 +26,10 @@ export async function generateStaticParams() {
 
   const products = await Promise.all(
     countryCodes.map((countryCode) => {
-      return getProductsList({ countryCode })
+      return getProductsList({
+        countryCode,
+        queryParams: { limit: STATIC_PRODUCT_LIMIT },
+      })
     })
   ).then((responses) =>
     responses.map(({ response }) => response.products).flat()
