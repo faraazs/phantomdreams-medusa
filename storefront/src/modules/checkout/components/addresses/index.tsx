@@ -6,7 +6,7 @@ import { CheckCircleSolid } from "@medusajs/icons"
 import { Heading, Text, useToggleState } from "@medusajs/ui"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
-import { DividerSeparator } from "@modules/common/components"
+import { Divider } from "@modules/common/components"
 import Spinner from "@modules/common/icons/spinner"
 
 import { useSetAddresses } from "@lib/hooks/use-cart-mutations"
@@ -205,7 +205,7 @@ const Addresses = ({
           </div>
         </div>
       )}
-      <DividerSeparator className="mt-8" />
+      <Divider className="mt-8" />
     </div>
   )
 }

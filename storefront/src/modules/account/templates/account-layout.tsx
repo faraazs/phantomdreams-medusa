@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { InteractiveLinkLink } from "@modules/common/components"
+import { InteractiveLink } from "@modules/common/components"
 
 import AccountNav from "../components/account-nav"
 import { HttpTypes } from "@medusajs/types"
@@ -32,9 +32,9 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({
             </span>
           </div>
           <div>
-            <InteractiveLinkLink href="/customer-service">
+            <InteractiveLink href="/customer-service">
               Customer Service
-            </InteractiveLinkLink>
+            </InteractiveLink>
           </div>
         </div>
       </div>

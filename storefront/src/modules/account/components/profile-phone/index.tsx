@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { InputInput } from "@modules/common/components"
+import { Input } from "@modules/common/components"
 
 import AccountInfo from "../account-info"
 import { HttpTypes } from "@medusajs/types"
@@ -53,7 +53,7 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
         data-testid="account-phone-editor"
       >
         <div className="grid grid-cols-1 gap-y-2">
-          <InputInput
+          <Input
             label="Phone"
             name="phone"
             type="phone"

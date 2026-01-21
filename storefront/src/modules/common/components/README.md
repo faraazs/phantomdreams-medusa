@@ -36,11 +36,11 @@ ComponentName-primitive
 
 ### Examples
 
-- `InputInput` - Text input component (primitive: `<input>`)
-- `CheckboxCheckbox` - Checkbox component (primitive: `<input type="checkbox">`)
-- `ModalModal` - Modal dialog (primitive: dialog)
-- `DeleteButtonButton` - Button for deleting items (primitive: `<button>`)
-- `DividerSeparator` - Visual separator (primitive: separator/hr)
+- `Input` - Text input component (primitive: `<input>`)
+- `Checkbox` - Checkbox component (primitive: `<input type="checkbox">`)
+- `Modal` - Modal dialog (primitive: dialog)
+- `DeleteButton` - Button for deleting items (primitive: `<button>`)
+- `Divider` - Visual separator (primitive: separator/hr)
 
 ### Why This Convention?
 
@@ -55,7 +55,7 @@ ComponentName-primitive
 
 ### Primitive Components (shadcn-based)
 
-#### InputInput (`input-input`)
+#### Input (`input-input`)
 
 **Primitive:** `<input>`
 
@@ -81,7 +81,7 @@ ComponentName-primitive
 
 ---
 
-#### CheckboxCheckbox (`checkbox-checkbox`)
+#### Checkbox (`checkbox-checkbox`)
 
 **Primitive:** `<input type="checkbox">` + Radix UI
 
@@ -106,7 +106,7 @@ ComponentName-primitive
 
 ---
 
-#### ModalModal (`modal-modal`)
+#### Modal (`modal-modal`)
 
 **Primitive:** `dialog` (Radix UI Dialog)
 
@@ -125,10 +125,10 @@ ComponentName-primitive
 - `data-testid` (string, optional): Test identifier
 
 **Sub-components:**
-- `ModalModal.Title`: Modal title
-- `ModalModal.Description`: Modal description
-- `ModalModal.Body`: Modal body content
-- `ModalModal.Footer`: Modal footer actions
+- `Modal.Title`: Modal title
+- `Modal.Description`: Modal description
+- `Modal.Body`: Modal body content
+- `Modal.Footer`: Modal footer actions
 
 **Accessibility:**
 - Focus trap when open
@@ -138,7 +138,7 @@ ComponentName-primitive
 
 ---
 
-#### DeleteButtonButton (`delete-button-button`)
+#### DeleteButton (`delete-button-button`)
 
 **Primitive:** `<button>`
 
@@ -162,7 +162,7 @@ ComponentName-primitive
 
 ---
 
-#### RadioRadio (`radio-radio`)
+#### Radio (`radio-radio`)
 
 **Primitive:** `<input type="radio">`
 
@@ -187,7 +187,7 @@ ComponentName-primitive
 
 ---
 
-#### SelectSelect (`select-select`)
+#### Select (`select-select`)
 
 **Primitive:** `<select>`
 
@@ -211,7 +211,7 @@ ComponentName-primitive
 
 ---
 
-#### FilterRadioGroupRadio (`filter-radio-group-radio`)
+#### FilterRadioGroup (`filter-radio-group-radio`)
 
 **Primitive:** Radio group
 
@@ -235,7 +235,7 @@ ComponentName-primitive
 
 ---
 
-#### DividerSeparator (`divider-separator`)
+#### Divider (`divider-separator`)
 
 **Primitive:** `<hr>` / Radix UI Separator
 
@@ -255,7 +255,7 @@ ComponentName-primitive
 
 ---
 
-#### InteractiveLinkLink (`interactive-link-link`)
+#### InteractiveLink (`interactive-link-link`)
 
 **Primitive:** `<a>`
 
@@ -295,18 +295,18 @@ These components are **not** primitive-based and retain their original names:
 ### Basic Input
 
 ```tsx
-import { InputInput } from "@modules/common/components"
+import { Input } from "@modules/common/components"
 
 function LoginForm() {
   return (
     <form>
-      <InputInput 
+      <Input 
         label="Email" 
         name="email" 
         type="email" 
         required 
       />
-      <InputInput 
+      <Input 
         label="Password" 
         name="password" 
         type="password" 
@@ -320,13 +320,13 @@ function LoginForm() {
 ### Checkbox with Label
 
 ```tsx
-import { CheckboxCheckbox } from "@modules/common/components"
+import { Checkbox } from "@modules/common/components"
 
 function TermsAcceptance() {
   const [accepted, setAccepted] = useState(false)
   
   return (
-    <CheckboxCheckbox
+    <Checkbox
       label="I accept the terms and conditions"
       checked={accepted}
       onChange={() => setAccepted(!accepted)}
@@ -338,7 +338,7 @@ function TermsAcceptance() {
 ### Modal Dialog
 
 ```tsx
-import { ModalModal } from "@modules/common/components"
+import { Modal } from "@modules/common/components"
 import { Button } from "@/components/ui/button"
 
 function ConfirmDialog() {
@@ -350,24 +350,24 @@ function ConfirmDialog() {
         Delete Account
       </Button>
       
-      <ModalModal 
+      <Modal 
         isOpen={isOpen} 
         close={() => setIsOpen(false)}
         size="small"
       >
-        <ModalModal.Title>Confirm Deletion</ModalModal.Title>
-        <ModalModal.Description>
+        <Modal.Title>Confirm Deletion</Modal.Title>
+        <Modal.Description>
           Are you sure you want to delete your account? This action cannot be undone.
-        </ModalModal.Description>
-        <ModalModal.Footer>
+        </Modal.Description>
+        <Modal.Footer>
           <Button variant="ghost" onClick={() => setIsOpen(false)}>
             Cancel
           </Button>
           <Button variant="destructive" onClick={handleDelete}>
             Delete
           </Button>
-        </ModalModal.Footer>
-      </ModalModal>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }
@@ -376,13 +376,13 @@ function ConfirmDialog() {
 ### Radio Group for Filtering
 
 ```tsx
-import { FilterRadioGroupRadio } from "@modules/common/components"
+import { FilterRadioGroup } from "@modules/common/components"
 
 function SizeFilter() {
   const [selectedSize, setSelectedSize] = useState("md")
   
   return (
-    <FilterRadioGroupRadio
+    <FilterRadioGroup
       title="Size"
       items={[
         { value: "sm", label: "Small" },
@@ -405,15 +405,15 @@ Components are automatically available in MDX files:
 
 Here's an email subscription form:
 
-<InputInput label="Your email" name="email" type="email" />
+<Input label="Your email" name="email" type="email" />
 
-<CheckboxCheckbox label="Subscribe to newsletter" />
+<Checkbox label="Subscribe to newsletter" />
 
-<DividerSeparator />
+<Divider />
 
-<InteractiveLinkLink href="/products">
+<InteractiveLink href="/products">
   View all products
-</InteractiveLinkLink>
+</InteractiveLink>
 ```
 
 ---
@@ -426,15 +426,15 @@ Here's an email subscription form:
 
 | Old (Medusa UI) | New (shadcn) | Notes |
 |----------------|--------------|-------|
-| `Input` | `InputInput` | Added password toggle |
-| `Checkbox` | `CheckboxCheckbox` | Now uses Radix UI |
-| `Modal` | `ModalModal` | Now uses Dialog primitive |
-| `DeleteButton` | `DeleteButtonButton` | lucide-react icons |
-| `Radio` | `RadioRadio` | Custom styled |
-| `NativeSelect` | `SelectSelect` | Enhanced styling |
-| `FilterRadioGroup` | `FilterRadioGroupRadio` | Circle indicator |
-| `Divider` | `DividerSeparator` | Radix UI Separator |
-| `InteractiveLink` | `InteractiveLinkLink` | lucide-react arrow |
+| `Input` | `Input` | Added password toggle |
+| `Checkbox` | `Checkbox` | Now uses Radix UI |
+| `Modal` | `Modal` | Now uses Dialog primitive |
+| `DeleteButton` | `DeleteButton` | lucide-react icons |
+| `Radio` | `Radio` | Custom styled |
+| `NativeSelect` | `Select` | Enhanced styling |
+| `FilterRadioGroup` | `FilterRadioGroup` | Circle indicator |
+| `Divider` | `Divider` | Radix UI Separator |
+| `InteractiveLink` | `InteractiveLink` | lucide-react arrow |
 
 #### Utility Function Changes
 
@@ -465,7 +465,7 @@ import { Trash, Loader2 } from "lucide-react"
 import { Input, Checkbox, Modal } from "@modules/common/components"
 
 // After
-import { InputInput, CheckboxCheckbox, ModalModal } from "@modules/common/components"
+import { Input, Checkbox, Modal } from "@modules/common/components"
 
 // Or use legacy exports (deprecated)
 import { Input, Checkbox, Modal } from "@modules/common/components"
@@ -522,8 +522,8 @@ All components in this library follow WCAG 2.1 Level AA standards:
 All components use `React.memo` to prevent unnecessary re-renders:
 
 ```tsx
-const InputInput = React.memo(
-  React.forwardRef<HTMLInputElement, InputInputProps>(
+const Input = React.memo(
+  React.forwardRef<HTMLInputElement, InputProps>(
     ({ /* props */ }, ref) => {
       // Component logic
     }
@@ -538,7 +538,7 @@ Heavy components like modals can be lazy-loaded:
 ```tsx
 import dynamic from "next/dynamic"
 
-const ModalModal = dynamic(() => import("@modules/common/components/modal-modal"), {
+const Modal = dynamic(() => import("@modules/common/components/modal-modal"), {
   ssr: false,
   loading: () => <div>Loading...</div>
 })
@@ -570,9 +570,9 @@ import * as Icons from "lucide-react"
 
 ```tsx
 /**
- * Props for the InputInput component
+ * Props for the Input component
  */
-type InputInputProps = {
+type InputProps = {
   /** The label text for the input field */
   label: string
   /** The name attribute for the input */

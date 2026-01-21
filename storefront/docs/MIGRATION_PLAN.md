@@ -136,12 +136,12 @@ This document outlines the migration strategy for the remaining 73+ files that c
 1. `storefront/src/modules/account/components/login/index.tsx`
    - **Medusa UI:** Button, Input, Label
    - **Effort:** Medium
-   - **Notes:** Can use new InputInput component
+   - **Notes:** Can use new Input component
    
 2. `storefront/src/modules/account/components/register/index.tsx`
    - **Medusa UI:** Button, Input, Label, Checkbox
    - **Effort:** Medium
-   - **Notes:** Can use new InputInput and CheckboxCheckbox
+   - **Notes:** Can use new Input and Checkbox
    
 3. `storefront/src/modules/account/components/account-info/index.tsx`
    - **Medusa UI:** Button, Heading, Text
@@ -150,7 +150,7 @@ This document outlines the migration strategy for the remaining 73+ files that c
 4. `storefront/src/modules/account/components/address-card/*.tsx`
    - **Medusa UI:** Button, Modal, Input
    - **Effort:** Medium
-   - **Notes:** Can use new ModalModal and InputInput
+   - **Notes:** Can use new Modal and Input
    
 5-12. Other account components (profile-*, order-overview, order-card)
 
@@ -245,8 +245,8 @@ rg "from \"@medusajs/ui\"" <file-path>
 
 **b) Map to shadcn Equivalents**
 - `Button` → `@/components/ui/button`
-- `Input` → Use `InputInput` from common
-- `Checkbox` → Use `CheckboxCheckbox` from common
+- `Input` → Use `Input` from common
+- `Checkbox` → Use `Checkbox` from common
 - `Label` → `@/components/ui/label`
 - `Text` → Use Tailwind classes or `<span>`/`<p>`
 - `Heading` → Use semantic HTML (`<h1>`, `<h2>`, etc.)
@@ -405,8 +405,8 @@ Many forms repeat the same pattern:
 ```tsx
 // Create: FormGroup component
 <FormGroup>
-  <InputInput label="Email" name="email" />
-  <InputInput label="Password" name="password" type="password" />
+  <Input label="Email" name="email" />
+  <Input label="Password" name="password" type="password" />
 </FormGroup>
 ```
 

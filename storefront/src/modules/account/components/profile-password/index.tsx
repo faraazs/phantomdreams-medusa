@@ -2,7 +2,7 @@
 
 import React, { useActionState, useEffect } from "react"
 
-import { InputInput } from "@modules/common/components"
+import { Input } from "@modules/common/components"
 
 import AccountInfo from "../account-info"
 import { HttpTypes } from "@medusajs/types"
@@ -43,21 +43,21 @@ const ProfileName: React.FC<MyInformationProps> = ({ customer }) => {
         data-testid="account-password-editor"
       >
         <div className="grid grid-cols-2 gap-4">
-          <InputInput
+          <Input
             label="Old password"
             name="old_password"
             required
             type="password"
             data-testid="old-password-input"
           />
-          <InputInput
+          <Input
             label="New password"
             type="password"
             name="new_password"
             required
             data-testid="new-password-input"
           />
-          <InputInput
+          <Input
             label="Confirm password"
             type="password"
             name="confirm_password"

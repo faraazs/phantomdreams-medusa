@@ -1,7 +1,7 @@
 import { Container, Text } from "@medusajs/ui"
 import { useHits, useSearchBox } from "react-instantsearch-hooks-web"
 
-import { InteractiveLinkLink } from "@modules/common/components"
+import { InteractiveLink } from "@modules/common/components"
 
 const ShowAll = () => {
   const { hits } = useHits()
@@ -25,7 +25,7 @@ const ShowAll = () => {
   return (
     <Container className="flex sm:flex-col small:flex-row gap-2 justify-center items-center h-fit py-4 small:py-2">
       <Text>Showing the first {width > 640 ? 6 : 3} results.</Text>
-      <InteractiveLinkLink href={`/results/${query}`}>View all</InteractiveLinkLink>
+      <InteractiveLink href={`/results/${query}`}>View all</InteractiveLink>
     </Container>
   )
 }

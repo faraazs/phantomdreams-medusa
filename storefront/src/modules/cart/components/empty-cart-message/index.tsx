@@ -1,6 +1,6 @@
 import { Heading, Text } from "@medusajs/ui"
 
-import { InteractiveLinkLink } from "@modules/common/components"
+import { InteractiveLink } from "@modules/common/components"
 
 const EmptyCartMessage = () => {
   return (
@@ -16,7 +16,7 @@ const EmptyCartMessage = () => {
         the link below to start browsing our products.
       </Text>
       <div>
-        <InteractiveLinkLink href="/store">Explore products</InteractiveLinkLink>
+        <InteractiveLink href="/store">Explore products</InteractiveLink>
       </div>
     </div>
   )

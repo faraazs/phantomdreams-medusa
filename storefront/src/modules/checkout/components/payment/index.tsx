@@ -9,7 +9,7 @@ import { Button, Container, Heading, Text, Tooltip, clx } from "@medusajs/ui"
 import { CardElement } from "@stripe/react-stripe-js"
 import { StripeCardElementOptions } from "@stripe/stripe-js"
 
-import { DividerSeparator } from "@modules/common/components"
+import { Divider } from "@modules/common/components"
 import PaymentContainer from "@modules/checkout/components/payment-container"
 import { isStripe as isStripeFunc, paymentInfoMap } from "@lib/constants"
 import { StripeContext } from "@modules/checkout/components/payment-wrapper"
@@ -273,7 +273,7 @@ const Payment = ({
           ) : null}
         </div>
       </div>
-      <DividerSeparator className="mt-8" />
+      <Divider className="mt-8" />
     </div>
   )
 }

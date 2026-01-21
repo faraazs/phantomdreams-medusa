@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react"
 
-import { InputInput, SelectSelect } from "@modules/common/components"
+import { Input, Select } from "@modules/common/components"
 
 import AccountInfo from "../account-info"
 import { HttpTypes } from "@medusajs/types"
@@ -108,14 +108,14 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
       >
         <div className="grid grid-cols-1 gap-y-2">
           <div className="grid grid-cols-2 gap-x-2">
-            <InputInput
+            <Input
               label="First name"
               name="billing_address.first_name"
               defaultValue={billingAddress?.first_name || undefined}
               required
               data-testid="billing-first-name-input"
             />
-            <InputInput
+            <Input
               label="Last name"
               name="billing_address.last_name"
               defaultValue={billingAddress?.last_name || undefined}
@@ -123,34 +123,34 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
               data-testid="billing-last-name-input"
             />
           </div>
-          <InputInput
+          <Input
             label="Company"
             name="billing_address.company"
             defaultValue={billingAddress?.company || undefined}
             data-testid="billing-company-input"
           />
-          <InputInput
+          <Input
             label="Address"
             name="billing_address.address_1"
             defaultValue={billingAddress?.address_1 || undefined}
             required
             data-testid="billing-address-1-input"
           />
-          <InputInput
+          <Input
             label="Apartment, suite, etc."
             name="billing_address.address_2"
             defaultValue={billingAddress?.address_2 || undefined}
             data-testid="billing-address-2-input"
           />
           <div className="grid grid-cols-[144px_1fr] gap-x-2">
-            <InputInput
+            <Input
               label="Postal code"
               name="billing_address.postal_code"
               defaultValue={billingAddress?.postal_code || undefined}
               required
               data-testid="billing-postcal-code-input"
             />
-            <InputInput
+            <Input
               label="City"
               name="billing_address.city"
               defaultValue={billingAddress?.city || undefined}
@@ -158,13 +158,13 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
               data-testid="billing-city-input"
             />
           </div>
-          <InputInput
+          <Input
             label="Province"
             name="billing_address.province"
             defaultValue={billingAddress?.province || undefined}
             data-testid="billing-province-input"
           />
-          <SelectSelect
+          <Select
             name="billing_address.country_code"
             defaultValue={billingAddress?.country_code || undefined}
             required
@@ -178,7 +178,7 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
                 </option>
               )
             })}
-          </SelectSelect>
+          </Select>
         </div>
       </AccountInfo>
     </form>

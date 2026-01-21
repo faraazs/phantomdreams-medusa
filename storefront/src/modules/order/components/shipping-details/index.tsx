@@ -2,7 +2,7 @@ import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 import { Heading, Text } from "@medusajs/ui"
 
-import { DividerSeparator } from "@modules/common/components"
+import { Divider } from "@modules/common/components"
 
 type ShippingDetailsProps = {
   order: HttpTypes.StoreOrder
@@ -67,7 +67,7 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
           </Text>
         </div>
       </div>
-      <DividerSeparator className="mt-8" />
+      <Divider className="mt-8" />
     </div>
   )
 }
