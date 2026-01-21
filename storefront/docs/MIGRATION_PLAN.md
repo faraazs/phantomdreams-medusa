@@ -568,5 +568,5 @@ If issues arise:
 ---
 
 **Document Version:** 1.1  
-**Last Updated:** January 21, 2026  
+**Last Updated:** January 21, 2026
 **Owner:** Development Team
