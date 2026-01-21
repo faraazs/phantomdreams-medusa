@@ -1,3 +1,5 @@
+"use client"
+
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff } from "lucide-react"
 import React, { useEffect, useImperativeHandle, useState } from "react"
