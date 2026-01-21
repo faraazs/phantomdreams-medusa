@@ -5,6 +5,7 @@ import { Text, clx } from "@medusajs/ui"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import MedusaCTA from "@modules/layout/components/medusa-cta"
+import Link from "next/link"
 
 export default async function Footer() {
   const { collections } = await getCollectionsList(0, 6)
@@ -32,7 +33,17 @@ export default async function Footer() {
               {getSiteName()}
             </LocalizedClientLink>
           </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
+          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="flex flex-col gap-y-2">
+              <span className="txt-small-plus txt-ui-fg-base">Company</span>
+              <ul className="grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small">
+                <li>
+                  <Link href="/blog" className="hover:text-ui-fg-base">
+                    Blog
+                  </Link>
+                </li>
+              </ul>
+            </div>
             {product_categories && product_categories?.length > 0 && (
               <div className="flex flex-col gap-y-2">
                 <span className="txt-small-plus txt-ui-fg-base">

@@ -109,4 +109,73 @@
   .text-3xl-semi {
     @apply text-[32px] leading-[44px] font-semibold;
   }
+
+  /* Button Components */
+  .btn {
+    @apply inline-flex items-center justify-center transition-colors duration-200 ease-in;
+  }
+
+  .btn--primary {
+    @apply btn px-4 py-2 border border-black rounded-full hover:bg-black hover:text-white;
+  }
+
+  .btn--link {
+    @apply text-blue-600 hover:text-blue-800 underline transition-colors;
+  }
+
+  /* Card Components */
+  .card {
+    @apply rounded-lg border border-gray-200 overflow-hidden;
+  }
+
+  .card--hover {
+    @apply card hover:shadow-lg transition-shadow duration-200;
+  }
+
+  .card--blog {
+    @apply card--hover block group;
+  }
+
+  /* Link Components */
+  .link {
+    @apply transition-colors duration-200;
+  }
+
+  .link--base {
+    @apply link text-blue-600 hover:text-blue-800 underline;
+  }
+
+  .link--nav {
+    @apply link hover:text-ui-fg-base;
+  }
+
+  .link--back {
+    @apply link inline-flex items-center text-base-regular text-gray-600 hover:text-gray-900;
+  }
+
+  /* Tag Components */
+  .tag {
+    @apply rounded px-2 py-1;
+  }
+
+  .tag--sm {
+    @apply tag text-xsmall-regular;
+  }
+
+  .tag--base {
+    @apply tag text-small-regular px-3 py-1 rounded-full;
+  }
+
+  .tag--gray {
+    @apply bg-gray-100 text-gray-700;
+  }
+
+  /* Image Components */
+  .img-cover {
+    @apply object-cover w-full h-full;
+  }
+
+  .img-cover--hover {
+    @apply img-cover group-hover:scale-105 transition-transform duration-300;
+  }
 }
