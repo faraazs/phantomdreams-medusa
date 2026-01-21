@@ -1,4 +1,4 @@
-import InteractiveLink from "@modules/common/components/interactive-link"
+import { InteractiveLinkLink } from "@modules/common/components"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default async function NotFound() {
       <p className="text-small-regular text-ui-fg-base">
         The page you tried to access does not exist.
       </p>
-      <InteractiveLink href="/">Go to frontpage</InteractiveLink>
+      <InteractiveLinkLink href="/">Go to frontpage</InteractiveLinkLink>
     </div>
   )
 }

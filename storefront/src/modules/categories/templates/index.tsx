@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { Suspense } from "react"
 
-import InteractiveLink from "@modules/common/components/interactive-link"
+import { InteractiveLinkLink } from "@modules/common/components"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import RefinementList from "@modules/store/components/refinement-list"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
@@ -61,9 +61,9 @@ export default function CategoryTemplate({
             <ul className="grid grid-cols-1 gap-2">
               {category.category_children?.map((c) => (
                 <li key={c.id}>
-                  <InteractiveLink href={`/categories/${c.handle}`}>
+                  <InteractiveLinkLink href={`/categories/${c.handle}`}>
                     {c.name}
-                  </InteractiveLink>
+                  </InteractiveLinkLink>
                 </li>
               ))}
             </ul>

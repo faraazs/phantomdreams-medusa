@@ -6,7 +6,7 @@ import { useParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import { useIntersection } from "@lib/hooks/use-in-view"
-import Divider from "@modules/common/components/divider"
+import { DividerSeparator } from "@modules/common/components"
 import OptionSelect from "@modules/products/components/product-actions/option-select"
 
 import MobileActions from "./mobile-actions"
@@ -125,7 +125,7 @@ export default function ProductActions({
                   </div>
                 )
               })}
-              <Divider />
+              <DividerSeparator />
             </div>
           )}
         </div>

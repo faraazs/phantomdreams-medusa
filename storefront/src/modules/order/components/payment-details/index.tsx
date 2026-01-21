@@ -1,7 +1,7 @@
 import { Container, Heading, Text } from "@medusajs/ui"
 
 import { isStripe, paymentInfoMap } from "@lib/constants"
-import Divider from "@modules/common/components/divider"
+import { DividerSeparator } from "@modules/common/components"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 
@@ -55,7 +55,7 @@ const PaymentDetails = ({ order }: PaymentDetailsProps) => {
         )}
       </div>
 
-      <Divider className="mt-8" />
+      <DividerSeparator className="mt-8" />
     </div>
   )
 }

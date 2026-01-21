@@ -1,7 +1,6 @@
 import { HttpTypes } from "@medusajs/types"
 import { Container } from "@medusajs/ui"
-import Checkbox from "@modules/common/components/checkbox"
-import Input from "@modules/common/components/input"
+import { CheckboxCheckbox, InputInput } from "@modules/common/components"
 import mapKeys from "lodash/mapKeys"
 import React, { useEffect, useMemo, useState } from "react"
 import AddressSelect from "../address-select"
@@ -100,7 +99,7 @@ const ShippingAddress = ({
         </Container>
       )}
       <div className="grid grid-cols-2 gap-4">
-        <Input
+        <InputInput
           label="First name"
           name="shipping_address.first_name"
           autoComplete="given-name"
@@ -109,7 +108,7 @@ const ShippingAddress = ({
           required
           data-testid="shipping-first-name-input"
         />
-        <Input
+        <InputInput
           label="Last name"
           name="shipping_address.last_name"
           autoComplete="family-name"
@@ -118,7 +117,7 @@ const ShippingAddress = ({
           required
           data-testid="shipping-last-name-input"
         />
-        <Input
+        <InputInput
           label="Address"
           name="shipping_address.address_1"
           autoComplete="address-line1"
@@ -127,7 +126,7 @@ const ShippingAddress = ({
           required
           data-testid="shipping-address-input"
         />
-        <Input
+        <InputInput
           label="Company"
           name="shipping_address.company"
           value={formData["shipping_address.company"]}
@@ -135,7 +134,7 @@ const ShippingAddress = ({
           autoComplete="organization"
           data-testid="shipping-company-input"
         />
-        <Input
+        <InputInput
           label="Postal code"
           name="shipping_address.postal_code"
           autoComplete="postal-code"
@@ -144,7 +143,7 @@ const ShippingAddress = ({
           required
           data-testid="shipping-postal-code-input"
         />
-        <Input
+        <InputInput
           label="City"
           name="shipping_address.city"
           autoComplete="address-level2"
@@ -162,7 +161,7 @@ const ShippingAddress = ({
           required
           data-testid="shipping-country-select"
         />
-        <Input
+        <InputInput
           label="State / Province"
           name="shipping_address.province"
           autoComplete="address-level1"
@@ -173,7 +172,7 @@ const ShippingAddress = ({
         />
       </div>
       <div className="my-8">
-        <Checkbox
+        <CheckboxCheckbox
           label="Billing address same as shipping address"
           name="same_as_billing"
           checked={checked}
@@ -182,7 +181,7 @@ const ShippingAddress = ({
         />
       </div>
       <div className="grid grid-cols-2 gap-4 mb-4">
-        <Input
+        <InputInput
           label="Email"
           name="email"
           type="email"
@@ -193,7 +192,7 @@ const ShippingAddress = ({
           required
           data-testid="shipping-email-input"
         />
-        <Input
+        <InputInput
           label="Phone"
           name="shipping_address.phone"
           autoComplete="tel"

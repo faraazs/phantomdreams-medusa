@@ -1,9 +1,11 @@
 import { forwardRef, useImperativeHandle, useMemo, useRef } from "react"
 
-import NativeSelect, {
-  NativeSelectProps,
-} from "@modules/common/components/native-select"
+import { SelectSelect } from "@modules/common/components"
 import { HttpTypes } from "@medusajs/types"
+
+type NativeSelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & {
+  placeholder?: string
+}
 
 const CountrySelect = forwardRef<
   HTMLSelectElement,
@@ -30,7 +32,7 @@ const CountrySelect = forwardRef<
   }, [region])
 
   return (
-    <NativeSelect
+    <SelectSelect
       ref={innerRef}
       placeholder={placeholder}
       defaultValue={defaultValue}
@@ -41,7 +43,7 @@ const CountrySelect = forwardRef<
           {label}
         </option>
       ))}
-    </NativeSelect>
+    </SelectSelect>
   )
 })
 

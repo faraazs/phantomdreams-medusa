@@ -1,7 +1,7 @@
 import { useActionState } from "react"
 
 import { LOGIN_VIEW } from "@modules/account/templates/login-template"
-import Input from "@modules/common/components/input"
+import { InputInput } from "@modules/common/components"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { SubmitButton } from "@modules/checkout/components/submit-button"
 import { login } from "@lib/data/customer"
@@ -24,7 +24,7 @@ const Login = ({ setCurrentView }: Props) => {
       </p>
       <form className="w-full" action={formAction}>
         <div className="flex flex-col w-full gap-y-2">
-          <Input
+          <InputInput
             label="Email"
             name="email"
             type="email"
@@ -33,7 +33,7 @@ const Login = ({ setCurrentView }: Props) => {
             required
             data-testid="email-input"
           />
-          <Input
+          <InputInput
             label="Password"
             name="password"
             type="password"

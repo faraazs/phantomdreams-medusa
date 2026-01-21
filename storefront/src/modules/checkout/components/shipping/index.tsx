@@ -4,8 +4,7 @@ import { RadioGroup } from "@headlessui/react"
 import { CheckCircleSolid } from "@medusajs/icons"
 import { Button, Heading, Text, clx } from "@medusajs/ui"
 
-import Divider from "@modules/common/components/divider"
-import Radio from "@modules/common/components/radio"
+import { DividerSeparator, RadioRadio } from "@modules/common/components"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -115,7 +114,7 @@ const Shipping: React.FC<ShippingProps> = ({
                     )}
                   >
                     <div className="flex items-center gap-x-4">
-                      <Radio
+                      <RadioRadio
                         checked={option.id === selectedShippingMethod?.id}
                       />
                       <span className="text-base-regular">{option.name}</span>
@@ -168,7 +167,7 @@ const Shipping: React.FC<ShippingProps> = ({
           </div>
         </div>
       )}
-      <Divider className="mt-8" />
+      <DividerSeparator className="mt-8" />
     </div>
   )
 }

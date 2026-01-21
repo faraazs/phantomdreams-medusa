@@ -3,7 +3,7 @@ import { ChevronUpDown } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
 import { Fragment, useMemo } from "react"
 
-import Radio from "@modules/common/components/radio"
+import { RadioRadio } from "@modules/common/components"
 import compareAddresses from "@lib/util/compare-addresses"
 import { HttpTypes } from "@medusajs/types"
 
@@ -73,7 +73,7 @@ const AddressSelect = ({
                   data-testid="shipping-address-option"
                 >
                   <div className="flex gap-x-4 items-start">
-                    <Radio
+                    <RadioRadio
                       checked={selectedAddress?.id === address.id}
                       data-testid="shipping-address-radio"
                     />

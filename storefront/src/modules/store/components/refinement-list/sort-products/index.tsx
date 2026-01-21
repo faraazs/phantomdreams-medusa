@@ -1,6 +1,6 @@
 "use client"
 
-import FilterRadioGroup from "@modules/common/components/filter-radio-group"
+import { FilterRadioGroupRadio } from "@modules/common/components"
 
 export type SortOptions = "price_asc" | "price_desc" | "created_at"
 
@@ -30,12 +30,12 @@ const SortProducts = ({
   sortBy,
   setQueryParams,
 }: SortProductsProps) => {
-  const handleChange = (value: SortOptions) => {
-    setQueryParams("sortBy", value)
+  const handleChange = (value: string) => {
+    setQueryParams("sortBy", value as SortOptions)
   }
 
   return (
-    <FilterRadioGroup
+    <FilterRadioGroupRadio
       title="Sort by"
       items={sortOptions}
       value={sortBy}

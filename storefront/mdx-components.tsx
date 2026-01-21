@@ -1,13 +1,36 @@
 import type { MDXComponents } from "mdx/types"
 import Image, { ImageProps } from "next/image"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import {
+  InputInput,
+  CheckboxCheckbox,
+  ModalModal,
+  DividerSeparator,
+  InteractiveLinkLink,
+} from "@modules/common/components"
 
 /**
  * This file is required for Next.js App Router to work with MDX.
  * It defines custom React components for HTML elements rendered from MDX.
+ * 
+ * New shadcn-based components are available for use in MDX files:
+ * - Button: <Button variant="default">Click me</Button>
+ * - InputInput: <InputInput label="Email" name="email" type="email" />
+ * - CheckboxCheckbox: <CheckboxCheckbox label="Accept terms" />
+ * - ModalModal: Complex modal dialogs
+ * - DividerSeparator: <DividerSeparator />
+ * - InteractiveLinkLink: <InteractiveLinkLink href="/path">Link text</InteractiveLinkLink>
  */
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
+    // Custom shadcn-based components available in MDX
+    Button,
+    InputInput,
+    CheckboxCheckbox,
+    ModalModal,
+    DividerSeparator,
+    InteractiveLinkLink,
     // Headings
     h1: ({ children }) => (
       <h1 className="text-3xl-semi mb-6 mt-8 first:mt-0">{children}</h1>

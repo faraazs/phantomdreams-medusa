@@ -8,7 +8,7 @@ import { Fragment, useEffect, useRef, useState } from "react"
 
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
-import DeleteButton from "@modules/common/components/delete-button"
+import { DeleteButtonButton } from "@modules/common/components"
 import LineItemOptions from "@modules/common/components/line-item-options"
 import LineItemPrice from "@modules/common/components/line-item-price"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -162,13 +162,13 @@ const CartDropdown = ({
                               </div>
                             </div>
                           </div>
-                          <DeleteButton
+                          <DeleteButtonButton
                             id={item.id}
                             className="mt-1"
                             data-testid="cart-item-remove-button"
                           >
                             Remove
-                          </DeleteButton>
+                          </DeleteButtonButton>
                         </div>
                       </div>
                     ))}

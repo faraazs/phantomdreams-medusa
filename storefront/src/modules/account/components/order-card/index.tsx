@@ -1,6 +1,6 @@
-import { Button } from "@medusajs/ui"
 import { useMemo } from "react"
 
+import { Button } from "@/components/ui/button"
 import Thumbnail from "@modules/products/components/thumbnail"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { convertToLocale } from "@lib/util/money"

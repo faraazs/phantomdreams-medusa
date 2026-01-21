@@ -3,7 +3,7 @@ import { InformationCircleSolid } from "@medusajs/icons"
 import { Text, Tooltip, clx } from "@medusajs/ui"
 import React from "react"
 
-import Radio from "@modules/common/components/radio"
+import { RadioRadio } from "@modules/common/components"
 
 import PaymentTest from "../payment-test"
 import { isManual } from "@lib/constants"
@@ -39,7 +39,7 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
       >
         <div className="flex items-center justify-between ">
           <div className="flex items-center gap-x-4">
-            <Radio checked={selectedPaymentOptionId === paymentProviderId} />
+            <RadioRadio checked={selectedPaymentOptionId === paymentProviderId} />
             <Text className="text-base-regular">
               {paymentInfoMap[paymentProviderId]?.title || paymentProviderId}
             </Text>

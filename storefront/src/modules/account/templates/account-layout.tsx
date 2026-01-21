@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import UnderlineLink from "@modules/common/components/interactive-link"
+import { InteractiveLinkLink } from "@modules/common/components"
 
 import AccountNav from "../components/account-nav"
 import { HttpTypes } from "@medusajs/types"
@@ -32,9 +32,9 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({
             </span>
           </div>
           <div>
-            <UnderlineLink href="/customer-service">
+            <InteractiveLinkLink href="/customer-service">
               Customer Service
-            </UnderlineLink>
+            </InteractiveLinkLink>
           </div>
         </div>
       </div>

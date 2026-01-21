@@ -1,7 +1,9 @@
 import { Disclosure } from "@headlessui/react"
-import { Badge, Button, clx } from "@medusajs/ui"
+import { Badge } from "@medusajs/ui"
 import { useEffect } from "react"
 
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import useToggleState from "@lib/hooks/use-toggle-state"
 import { useFormStatus } from "react-dom"
 
@@ -75,7 +77,7 @@ const AccountInfo = ({
       <Disclosure>
         <Disclosure.Panel
           static
-          className={clx(
+          className={cn(
             "transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden",
             {
               "max-h-[1000px] opacity-100": isSuccess,
@@ -94,7 +96,7 @@ const AccountInfo = ({
       <Disclosure>
         <Disclosure.Panel
           static
-          className={clx(
+          className={cn(
             "transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden",
             {
               "max-h-[1000px] opacity-100": isError,
@@ -112,7 +114,7 @@ const AccountInfo = ({
       <Disclosure>
         <Disclosure.Panel
           static
-          className={clx(
+          className={cn(
             "transition-[max-height,opacity] duration-300 ease-in-out overflow-visible",
             {
               "max-h-[1000px] opacity-100": state,
@@ -124,12 +126,12 @@ const AccountInfo = ({
             <div>{children}</div>
             <div className="flex items-center justify-end mt-2">
               <Button
-                isLoading={resolvedPending}
+                disabled={resolvedPending}
                 className="w-full small:max-w-[140px]"
                 type="submit"
                 data-testid="save-button"
               >
-                Save changes
+                {resolvedPending ? "Saving..." : "Save changes"}
               </Button>
             </div>
           </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { clx } from "@medusajs/ui"
+import { cn } from "@/lib/utils"
 import { ArrowRightOnRectangle } from "@medusajs/icons"
 import { useParams, usePathname } from "next/navigation"
 
@@ -186,7 +186,7 @@ const AccountNavLink = ({
   return (
     <LocalizedClientLink
       href={href}
-      className={clx("text-ui-fg-subtle hover:text-ui-fg-base", {
+      className={cn("text-ui-fg-subtle hover:text-ui-fg-base", {
         "text-ui-fg-base font-semibold": active,
       })}
       data-testid={dataTestId}
