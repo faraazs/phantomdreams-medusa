@@ -3,11 +3,11 @@ import Image, { ImageProps } from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
-  InputInput,
-  CheckboxCheckbox,
-  ModalModal,
-  DividerSeparator,
-  InteractiveLinkLink,
+  Input,
+  Checkbox,
+  Modal,
+  Divider,
+  InteractiveLink,
 } from "@modules/common/components"
 
 /**
@@ -16,21 +16,21 @@ import {
  * 
  * New shadcn-based components are available for use in MDX files:
  * - Button: <Button variant="default">Click me</Button>
- * - InputInput: <InputInput label="Email" name="email" type="email" />
- * - CheckboxCheckbox: <CheckboxCheckbox label="Accept terms" />
- * - ModalModal: Complex modal dialogs
- * - DividerSeparator: <DividerSeparator />
- * - InteractiveLinkLink: <InteractiveLinkLink href="/path">Link text</InteractiveLinkLink>
+ * - Input: <Input label="Email" name="email" type="email" />
+ * - Checkbox: <Checkbox label="Accept terms" />
+ * - Modal: Complex modal dialogs
+ * - Divider: <Divider />
+ * - InteractiveLink: <InteractiveLink href="/path">Link text</InteractiveLink>
  */
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     // Custom shadcn-based components available in MDX
     Button,
-    InputInput,
-    CheckboxCheckbox,
-    ModalModal,
-    DividerSeparator,
-    InteractiveLinkLink,
+    Input,
+    Checkbox,
+    Modal,
+    Divider,
+    InteractiveLink,
     // Headings
     h1: ({ children }) => (
       <h1 className="text-3xl-semi mb-6 mt-8 first:mt-0">{children}</h1>
