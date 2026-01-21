@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import ProductTemplate from "@modules/products/templates"
 import { getRegion, listRegions } from "@lib/data/regions"
 import { getProductByHandle, getProductsList } from "@lib/data/products"
+import { getSiteName } from "@lib/site-config"
 
 const STATIC_PRODUCT_LIMIT = 50
 
@@ -62,10 +63,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${product.title} | Medusa Store`,
+    title: `${product.title} | ${getSiteName()}`,
     description: `${product.title}`,
     openGraph: {
-      title: `${product.title} | Medusa Store`,
+      title: `${product.title} | ${getSiteName()}`,
       description: `${product.title}`,
       images: product.thumbnail ? [product.thumbnail] : [],
     },

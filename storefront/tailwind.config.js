@@ -1,4 +1,5 @@
 const path = require("path")
+const siteConfig = require("./siteConfig.json")
 
 module.exports = {
   darkMode: "class",
@@ -34,6 +35,9 @@ module.exports = {
           80: "#1F2937",
           90: "#111827",
         },
+        primary: siteConfig.theme.colors.primary,
+        secondary: siteConfig.theme.colors.secondary,
+        accent: siteConfig.theme.colors.accent,
       },
       borderRadius: {
         none: "0px",
@@ -60,7 +64,17 @@ module.exports = {
       },
       fontFamily: {
         sans: [
-          "Inter",
+          siteConfig.theme.fonts.body.family,
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Ubuntu",
+          "sans-serif",
+        ],
+        heading: [
+          siteConfig.theme.fonts.heading.family,
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",

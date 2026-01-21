@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { ShoppingBag, User } from "@medusajs/icons"
 
 import { listRegions } from "@lib/data/regions"
+import { getSiteName } from "@lib/site-config"
 import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
@@ -26,7 +27,7 @@ export default async function Nav() {
               className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase"
               data-testid="nav-store-link"
             >
-              Medusa Store
+              {getSiteName()}
             </LocalizedClientLink>
           </div>
 

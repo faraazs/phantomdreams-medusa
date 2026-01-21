@@ -4,11 +4,11 @@ import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
 import { getCollectionsWithProducts } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
+import { getSiteName, getSiteTagline } from "@lib/site-config"
 
 export const metadata: Metadata = {
-  title: "Medusa Next.js Starter Template",
-  description:
-    "A performant frontend ecommerce starter template with Next.js 14 and Medusa.",
+  title: getSiteName(),
+  description: getSiteTagline() || "Your premier online shopping destination",
 }
 
 export default async function Home({
