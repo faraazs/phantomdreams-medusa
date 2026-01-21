@@ -275,7 +275,7 @@
   }
 
   .card--blog {
-    @apply card--hover block group;
+    @apply card--hover block;
   }
 
   /* Link Components */
@@ -318,6 +318,6 @@
   }
 
   .img-cover--hover {
-    @apply img-cover group-hover:scale-105 transition-transform duration-300;
+    @apply img-cover transition-transform duration-300;
   }
 }

@@ -10,7 +10,7 @@ export default function BlogCard({ post }: BlogCardProps) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="card--blog"
+      className="card--blog group"
     >
       <div className="relative w-full aspect-[16/9] bg-gray-100">
         {post.image ? (
@@ -18,7 +18,7 @@ export default function BlogCard({ post }: BlogCardProps) {
             src={post.image}
             alt={post.title}
             fill
-            className="img-cover--hover"
+            className="img-cover--hover group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
